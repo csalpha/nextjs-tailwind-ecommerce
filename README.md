@@ -26,3 +26,14 @@
     4. create ProductItem.jsx
     5. render products
     6. use apply modifier from tailwind
+
+5.  Product Details
+
+    1. create product folder
+    2. create [slug].jsx ( ProductScreen )
+    3. create 3 columns
+    4. show image in first column
+    5. show product info in second column
+    6. show add to cart action on third column
+    7. add styles
+    8. npm i -D @types/react
