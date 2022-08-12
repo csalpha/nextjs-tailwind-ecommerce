@@ -10,10 +10,10 @@
     2. npx tailwindcss init -p
 
 3.  Create App Layout
+
     1. create components folder
     2. create Layout.jsx
-    3. Add:
-       1. header
-       2. main section
-       3. footer
-       4. tailwind classes
+    3. update header
+    4. update main section
+    5. update footer
+    6. add tailwind classes
