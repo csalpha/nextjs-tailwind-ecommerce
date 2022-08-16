@@ -37,3 +37,13 @@
     6. show add to cart action on third column
     7. add styles
     8. npm i -D @types/react
+
+6.  Handle Add To Cart
+
+    1. create Store.jsx
+    1. define react context
+    1. define cart items state
+    1. create add to cart action
+    1. add reducer
+    1. create store provider
+    1. handle add to cart button
