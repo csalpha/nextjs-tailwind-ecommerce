@@ -41,9 +41,19 @@
 6.  Handle Add To Cart
 
     1. create Store.jsx
-    1. define react context
-    1. define cart items state
-    1. create add to cart action
-    1. add reducer
-    1. create store provider
-    1. handle add to cart button
+    2. define react context
+    3. define cart items state
+    4. create add to cart action
+    5. add reducer
+    6. create store provider
+    7. handle add to cart button
+
+7.  Create Shopping Cart Page
+
+    1.  create cart.jsx
+    2.  get cart items from use context
+    3.  list items in cart items
+    4.  remove Item handler
+    5.  redirect to cart screen after add to cart
+    6.  add select box for quantity
+    7.  handle select box change

@@ -10,6 +10,7 @@ export default function ProductScreen() {
   // define state and dispatch equal to useContext
   const { state, dispatch } = useContext(Store);
 
+  const router = useRouter();
   const { query } = useRouter();
   const { slug } = query;
   const product = data.products.find((x) => x.slug === slug);
@@ -45,6 +46,10 @@ export default function ProductScreen() {
         quantity, // product quantity
       },
     });
+
+    //redirect user to the cart
+    // pass a new address as a parameter
+    router.push('/cart');
   };
 
   return (
@@ -79,7 +84,7 @@ export default function ProductScreen() {
           <div className="card p-5">
             <div className="mb-2 flex justify-between">
               <div>Price</div>
-              <div>€ {product.price}</div>
+              <div>{product.price} €</div>
             </div>
             <div className="mb-2 flex justify-between">
               <div>Status</div>
