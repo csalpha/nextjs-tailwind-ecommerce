@@ -1,11 +1,15 @@
 import { createContext, useReducer } from 'react';
+import Cookies from 'js-cookie';
 
 // call createContext()
 export const Store = createContext();
 
 // define initial state
 const initialState = {
-  cart: { cartItems: [] },
+  // read the cart object from the cookie
+  cart: Cookies.get('cart') // true or false
+    ? JSON.parse(Cookies.get('cart')) // convert the cart in the cookie to js object
+    : { cartItems: [] },
 };
 
 // define reducer function
@@ -44,6 +48,12 @@ function reducer(state, action) {
         concatenate them with the new item */
           [...state.cart.cartItems, newItem]; // we push the new item at the end of the cart items
 
+      // save cart in the cookie
+      Cookies.set(
+        'cart',
+        JSON.stringify({ ...state.cart, cartItems }) // convert to string
+      );
+
       // return updated cart items
       return {
         ...state, // keep the previous state
@@ -59,6 +69,13 @@ function reducer(state, action) {
       const cartItems = state.cart.cartItems.filter(
         (item) => item.slug !== action.payload.slug
       );
+
+      // save cart in the cookie
+      Cookies.set(
+        'cart',
+        JSON.stringify({ ...state.cart, cartItems }) // convert to string
+      );
+
       /* return all card items except that we passed in the
       action.payload */
       return { ...state, cart: { ...state.cart, cartItems } };

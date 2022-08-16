@@ -57,3 +57,8 @@
     5.  redirect to cart screen after add to cart
     6.  add select box for quantity
     7.  handle select box change
+
+8.  Save Cart Items in cookies
+
+    1. npm install js-cookie
+    2. save and retreive cart items in cookies
