@@ -62,3 +62,12 @@
 
     1. npm install js-cookie
     2. save and retreive cart items in cookies
+
+9.  Create Login Page
+
+    1. npm install react-hook-form (simple form validation)
+    2. input boxes
+    3. login button
+    4. sign in link
+    5. add css classes for input boxes using tailwind
+    6. implement form validation

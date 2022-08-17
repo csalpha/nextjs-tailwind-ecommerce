@@ -109,8 +109,11 @@ function CartScreen() {
                 </div>
               </li>
               <li>
+                {/* check authentication of user, 
+                if user  logged in -> redirect user to the shipping screen 
+                if it's not logged in, keep it in loggin screen */}
                 <button
-                  onClick={() => router.push('/shipping')}
+                  onClick={() => router.push('login?redirect=/shipping')}
                   className="primary-button w-full"
                 >
                   Check Out
