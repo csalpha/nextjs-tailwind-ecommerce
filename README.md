@@ -76,8 +76,9 @@
 
     1. npm install mongoose
     2. install mongodb or use mongodb atlas
-    3. save connection url in .env file
+    3. npm install bcryptjs
     4. create db.js
     5. create seed.js
     6. create user model User.js
-    7. npm install bcrypt.js
+    7. save connection url in .env file
+   
