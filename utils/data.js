@@ -1,4 +1,60 @@
+import bcrypt from 'bcryptjs';
+
 const data = {
+  // create users object array (sample users)
+  users: [
+    {
+      name: 'Carlos',
+      email: 'carlos@mail.com',
+      password: bcrypt.hashSync('1234', 8),
+      isAdmin: true,
+      isSeller: true,
+      seller: {
+        name: 'Sony',
+        logo: '/images/sony.png',
+        description: 'best seller',
+        rating: 4.5,
+        numReviews: 120,
+      },
+    },
+    {
+      name: 'Ana',
+      email: 'ana@mail.com',
+      password: bcrypt.hashSync('1234', 8),
+      isAdmin: false,
+      isSeller: true,
+      seller: {
+        name: 'Microsoft',
+        logo: 'images/microsoft.png',
+        description: 'best seller',
+        rating: 4.5,
+        numReviews: 120,
+      },
+    },
+    {
+      name: 'Joana',
+      email: 'joana@mail.com',
+      password: bcrypt.hashSync('1234', 8),
+      isAdmin: false,
+      isSeller: true,
+      seller: {
+        name: 'Nintendo',
+        logo: '/images/nintendo.png',
+        description: 'best seller',
+        rating: 4.5,
+        numReviews: 120,
+      },
+    },
+    {
+      name: 'Sofia',
+      email: 'sofia@mail.com',
+      password: bcrypt.hashSync('1234', 8),
+      isAdmin: false,
+      isSeller: false,
+    },
+  ],
+
+  // create products object array
   products: [
     {
       name: 'PS5 Digital Edition',

@@ -71,3 +71,13 @@
     4. sign in link
     5. add css classes for input boxes using tailwind
     6. implement form validation
+
+10. Connect To MongoDB
+
+    1. npm install mongoose
+    2. install mongodb or use mongodb atlas
+    3. save connection url in .env file
+    4. create db.js
+    5. create seed.js
+    6. create user model User.js
+    7. npm install bcrypt.js
