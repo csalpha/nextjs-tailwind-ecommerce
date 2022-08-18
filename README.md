@@ -81,11 +81,3 @@
     5. create seed.js
     6. create user model User.js
     7. npm install bcrypt.js
-
-11. Implement Login API
-
-    1. npm i next-auth
-    2. npm i react-toastify
-    3. create nextauth.js
-    4. implement signin
-    5. use signin in login form
