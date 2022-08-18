@@ -1,9 +1,19 @@
+import { useSession } from 'next-auth/react';
 import Head from 'next/head';
 import Link from 'next/link';
 import React, { useContext, useEffect, useState } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Store } from '../utils/Store';
 
 export default function Layout({ title, children }) {
+  // get status and session from useSession
+  const {
+    status, //it's a flag that showing the loading of session
+    data: session,
+  } = useSession();
+  //while we are loading the session we don't show the user name
+
   // get the state of the context
   const { state } = useContext(Store);
   const { cart } = state;
@@ -19,6 +29,8 @@ export default function Layout({ title, children }) {
         <meta name="description" content="Ecommerce Website" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      <ToastContainer position="bottom-center" limit={1} />
 
       <div className="flex min-h-screen flex-col justify-between ">
         <header>
@@ -37,9 +49,17 @@ export default function Layout({ title, children }) {
                   )}
                 </a>
               </Link>
-              <Link href="/login">
-                <a className="p-2">Login</a>
-              </Link>
+              {/* check the status */}
+              {status === 'loading' ? ( // status it's loading?
+                'Loading' // show loading
+              ) : session?.user ? ( // session exists? (true)
+                session.user.name // show session.user.name
+              ) : (
+                /* show a link to the login page */
+                <Link href="/login">
+                  <a className="p-2">Login</a>
+                </Link>
+              )}
             </div>
           </nav>
         </header>

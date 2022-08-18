@@ -1,9 +1,36 @@
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { signIn, useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import Layout from '../components/Layout';
+import { getError } from '../utils/error';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 
 export default function LoginScreen() {
+  // get the data ( rename to session ) from useSession hook, from next-auth
+
+  const { data: session } = useSession();
+
+  // router is comming for useRouter
+  const router = useRouter();
+
+  // extract redirect object from router.query object
+  const { redirect } = router.query;
+
+  // define useEffect
+  /* when there is a change in the session 
+  useEffect runs and here session.user has value and redirect user*/
+  useEffect(() => {
+    // check session
+    if (session?.user) {
+      // user logged in already
+      /* get the redirect from the query string, 
+      if it doesn't exist, redirect user to the homepage */
+      router.push(redirect || '/');
+    }
+  }, [router, session, redirect]);
+
   // get handleSubmit, register and formState from useForm hook
   const {
     handleSubmit,
@@ -12,8 +39,21 @@ export default function LoginScreen() {
   } = useForm();
 
   // implement the submitHandler function
-  const submitHandler = ({ email, password }) => {
-    console.log(email, password);
+  const submitHandler = async ({ email, password }) => {
+    try {
+      // call signIn function from next-auth
+      const result = await signIn('credentials', {
+        redirect: false,
+        email,
+        password,
+      });
+
+      if (result.error) {
+        toast.error(result.error);
+      }
+    } catch (err) {
+      toast.error(getError(err));
+    }
   };
 
   return (
@@ -62,7 +102,7 @@ export default function LoginScreen() {
             {...register('password', {
               required: 'Please enter password',
               /* password validation */
-              minLength: { value: 6, message: 'password is more than 5 chars' },
+              minLength: { value: 3, message: 'password is more than 5 chars' },
             })}
             className="w-full"
             id="password"
