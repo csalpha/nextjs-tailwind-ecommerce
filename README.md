@@ -81,3 +81,9 @@
     5. create seed.js
     6. create user model User.js
     7. npm install bcrypt.js
+
+11. Implement Login API
+    1. npm i next-auth
+    2. create nextauth.js
+    3. implement sign
+    4. use signin in login form
