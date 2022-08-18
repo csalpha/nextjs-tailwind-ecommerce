@@ -1,10 +1,13 @@
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import Head from 'next/head';
 import Link from 'next/link';
+import Cookies from 'js-cookie';
 import React, { useContext, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
+import { Menu } from '@headlessui/react';
 import 'react-toastify/dist/ReactToastify.css';
 import { Store } from '../utils/Store';
+import DropdownLink from './DropdownLink';
 
 export default function Layout({ title, children }) {
   // get status and session from useSession
@@ -14,13 +17,24 @@ export default function Layout({ title, children }) {
   } = useSession();
   //while we are loading the session we don't show the user name
 
-  // get the state of the context
-  const { state } = useContext(Store);
+  // get the state, dispatch from useContext
+  const { state, dispatch } = useContext(Store);
   const { cart } = state;
   const [cartItemsCount, setCartItemsCount] = useState(0);
+
   useEffect(() => {
     setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
   }, [cart.cartItems]);
+
+  // define logoutClickHandler
+  const logoutClickHandler = () => {
+    // remove the cart items from react
+    Cookies.remove('cart');
+    // dispatch 'CART_RESET' action
+    dispatch({ type: 'CART_RESET' });
+    // call signOut
+    signOut({ callbackUrl: '/login' /* set callbackUrl to the login */ });
+  };
 
   return (
     <>
@@ -53,7 +67,36 @@ export default function Layout({ title, children }) {
               {status === 'loading' ? ( // status it's loading?
                 'Loading' // show loading
               ) : session?.user ? ( // session exists? (true)
-                session.user.name // show session.user.name
+                /* add Menu from headless ui */
+                <Menu as="div" className="relative inline-block">
+                  <Menu.Button className="text-blue-600">
+                    {session.user.name}
+                  </Menu.Button>
+                  <Menu.Items className="absolute right-0 w-56 origin-top-right bg-white  shadow-lg ">
+                    <Menu.Item>
+                      <DropdownLink className="dropdown-link" href="/profile">
+                        Profile
+                      </DropdownLink>
+                    </Menu.Item>
+                    <Menu.Item>
+                      <DropdownLink
+                        className="dropdown-link"
+                        href="/order-history"
+                      >
+                        Order History
+                      </DropdownLink>
+                    </Menu.Item>
+                    <Menu.Item>
+                      <a
+                        className="dropdown-link"
+                        href="#"
+                        onClick={logoutClickHandler}
+                      >
+                        Logout
+                      </a>
+                    </Menu.Item>
+                  </Menu.Items>
+                </Menu>
               ) : (
                 /* show a link to the login page */
                 <Link href="/login">

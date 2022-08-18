@@ -80,6 +80,17 @@ function reducer(state, action) {
       action.payload */
       return { ...state, cart: { ...state.cart, cartItems } };
     }
+    // implement CART_RESET action
+    case 'CART_RESET':
+      return {
+        ...state, // keep the previous state
+        // make cart a empty object
+        cart: {
+          cartItems: [],
+          shippingAddress: { location: {} },
+          paymentMethod: '',
+        },
+      };
     default:
       return state; // return state as they are
   }

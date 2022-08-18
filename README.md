@@ -83,7 +83,17 @@
     7. npm install bcrypt.js
 
 11. Implement Login API
+
     1. npm i next-auth
     2. create nextauth.js
     3. implement sign
     4. use signin in login form
+
+12. Create User Menu
+
+    1. npm install @headlessui/react
+    2. Create DropdownLink.jsx
+    3. In the Layout.jsx implement logout handler
+    4. add menu for user
+    5. In the globals.css create new class
+    6. In the Store.jsx we added a case for card reset
