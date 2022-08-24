@@ -9,7 +9,10 @@ const initialState = {
   // read the cart object from the cookie
   cart: Cookies.get('cart') // true or false
     ? JSON.parse(Cookies.get('cart')) // convert the cart in the cookie to js object
-    : { cartItems: [] },
+    : {
+        cartItems: [], // set the cartItems with empty array
+        shippingAddress: {}, // set the shippingAddress with empty object
+      },
 };
 
 // define reducer function
@@ -89,6 +92,21 @@ function reducer(state, action) {
           cartItems: [],
           shippingAddress: { location: {} },
           paymentMethod: '',
+        },
+      };
+    // case of SAVE_SHIPPING_ADDRESS in the rducer
+    case 'SAVE_SHIPPING_ADDRESS':
+      // return object
+      return {
+        ...state, // keep the fields of state as they are
+        cart: {
+          ...state.cart, // keep the fields of cart as they are
+          shippingAddress: {
+            ...state.cart.shippingAddress, // keep the previous data in the shipping address
+            ...action.payload, //update shippingAddress fields by the data in the payload
+            /* is comming from the shipping form, the data that user entered in 
+            the input boxes */
+          },
         },
       };
     default:

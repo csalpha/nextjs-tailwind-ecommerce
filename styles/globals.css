@@ -27,7 +27,7 @@ a {
 }
 
 /* add css classes for input boxes */
-input,
+
 select,
 textarea {
   @apply rounded border p-2  outline-none ring-indigo-300  focus:ring;

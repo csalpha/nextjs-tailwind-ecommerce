@@ -97,3 +97,13 @@
     4. add menu for user
     5. In the globals.css create new class
     6. In the Store.jsx we added a case for card reset
+
+13. Implement Shipping Screen
+
+    1. create shipping.jsx
+    2. create CheckoutWizard.js
+    3. get the shipping address from the user
+    4. implement SAVE_SHIPPING_ADDRESS action in Store.jsx
+    5. implement Auth function in app.js
+    6. create unauthorized.jsx to redirect user to this page if user is not logged in
+    7. redirect user to the payment screen
