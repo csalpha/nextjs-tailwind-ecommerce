@@ -12,6 +12,7 @@ const initialState = {
     : {
         cartItems: [], // set the cartItems with empty array
         shippingAddress: {}, // set the shippingAddress with empty object
+        paymentMethod: '', // set the paymentMethod with a empty string
       },
 };
 
@@ -94,7 +95,7 @@ function reducer(state, action) {
           paymentMethod: '',
         },
       };
-    // case of SAVE_SHIPPING_ADDRESS in the rducer
+    // case SAVE_SHIPPING_ADDRESS in the rducer
     case 'SAVE_SHIPPING_ADDRESS':
       // return object
       return {
@@ -107,6 +108,16 @@ function reducer(state, action) {
             /* is comming from the shipping form, the data that user entered in 
             the input boxes */
           },
+        },
+      };
+    // case SAVE_PAYMENT_METHOD in the rducer
+    case 'SAVE_PAYMENT_METHOD':
+      return {
+        ...state, // keep the fields of state as they are
+        cart: {
+          ...state.cart, // keep the fields of cart as they are
+          // update paymentMethod with action.payload
+          paymentMethod: action.payload,
         },
       };
     default:

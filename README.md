@@ -107,3 +107,9 @@
     5. implement Auth function in app.js
     6. create unauthorized.jsx to redirect user to this page if user is not logged in
     7. redirect user to the payment screen
+
+14. Implement Payment Method Screen to get the payment method from the user
+
+    1. create payment method screen in payment.jsx (dispaly payment methods)
+    2. add default button class in globals.css
+    3. create a case for saving payment method in the Store.jsx (save payment method in context)
