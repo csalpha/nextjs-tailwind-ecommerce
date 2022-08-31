@@ -113,3 +113,8 @@
     1. create payment method screen in payment.jsx (dispaly payment methods)
     2. add default button class in globals.css
     3. create a case for saving payment method in the Store.jsx (save payment method in context)
+
+15. Seed products in /api/seed
+
+    1. create a Product Model
+    2. seed products to the Database

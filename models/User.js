@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 
-// Create a Schema using new mongoose.Schema
+// Create User Model
+
+// Create a user Schema using new mongoose.Schema
 const userSchema = new mongoose.Schema(
   // accept an object as a parameter
   {
