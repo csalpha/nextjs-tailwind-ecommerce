@@ -118,3 +118,7 @@ export default function PaymentScreen() {
     </Layout>
   );
 }
+
+/* make PaymentScreen.auth to true 
+   make this authenticated */
+PaymentScreen.auth = true;

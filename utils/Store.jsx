@@ -95,6 +95,15 @@ function reducer(state, action) {
           paymentMethod: '',
         },
       };
+    // implement CART_CLEAR_ITEMS
+    case 'CART_CLEAR_ITEMS':
+      return {
+        ...state, // keep the previous state
+        cart: {
+          ...state.cart, // keep the cart
+          cartItems: [], // set cartItems to empty array
+        },
+      };
     // case SAVE_SHIPPING_ADDRESS in the rducer
     case 'SAVE_SHIPPING_ADDRESS':
       // return object

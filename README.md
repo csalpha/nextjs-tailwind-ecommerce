@@ -126,3 +126,12 @@
     3. list products in the details page
     4. when user click in add to cart, check the quantity of product
     5. show error message if product is out of stock
+
+17. Create Place Order Screen
+
+    1. in pages/placeorder.jsx we created a placeorder screeen
+       to preview order and place order
+    2. in payment.jsx we made the payment screen authenticated
+    3. in pages/api/orders/index.js we created an api to create an order
+    4. in the models/Order.js, we create a model to save order information
+    5. in Store.jsx, we implement action 'CART_CLEAR_ITEMS'

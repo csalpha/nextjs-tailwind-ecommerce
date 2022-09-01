@@ -56,7 +56,7 @@ function CartScreen() {
       <h1 className="mb-4 text-xl">Shopping Cart</h1>
       {cartItems.length === 0 ? ( // true - Cart is empty
         <div>
-          Your cart is empty. <Link href="/">Go shopping</Link>
+          Your cart is empty. <Link href="/">Continue shopping</Link>
         </div>
       ) : (
         // false - create a list to show items in the cart

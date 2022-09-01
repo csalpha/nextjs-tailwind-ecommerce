@@ -34,4 +34,5 @@ const Product =
     'Product', // model name
     productSchema // schema
   );
+// export model
 export default Product;
