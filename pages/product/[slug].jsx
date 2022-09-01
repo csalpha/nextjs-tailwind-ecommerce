@@ -3,23 +3,30 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useContext } from 'react';
 import Layout from '../../components/Layout';
-import data from '../../utils/data';
 import { Store } from '../../utils/Store';
+import Product from '../../models/Product';
+import db from '../../utils/db';
+import { toast } from 'react-toastify';
+// Axios is a library to fetch data from backend api
+import axios from 'axios';
 
-export default function ProductScreen() {
+// get props like parameter
+export default function ProductScreen(props) {
+  // from props get the product
+  const { product } = props;
   // define state and dispatch equal to useContext
   const { state, dispatch } = useContext(Store);
 
   const router = useRouter();
-  const { query } = useRouter();
-  const { slug } = query;
-  const product = data.products.find((x) => x.slug === slug);
+
+  // if product does not exist
   if (!product) {
-    return <div>Produt Not Found</div>;
+    return <Layout title="Produt Not Found">Produt Not Found</Layout>;
   }
 
-  // addToCart function
-  const addToCartHandler = () => {
+  // define addToCart function
+
+  const addToCartHandler = async () => {
     // define existItem
     /* find - search in the items of the cart for the product 
               that we have in this page                       */
@@ -30,10 +37,18 @@ export default function ProductScreen() {
     const quantity = existItem //true
       ? existItem.quantity + 1 // false
       : 1;
+    // send an ajax request
+    // implement api `/api/products/${product._id}`
+    /*when  we put a id in this api, 
+      api is be called and the product
+      will be returned in a data variable*/
+    const { data } = await axios.get(`/api/products/${product._id}`);
 
-    if (product.countInStock < quantity) {
-      alert('Sorry, this item is temporarily out of stock');
-      return;
+    /* check the countInStock in the database to make sure that we have
+    stock/quantity in the database */
+    if (data.countInStock < quantity) {
+      // Show error
+      return toast.error('Sorry, this item is temporarily out of stock');
     }
 
     // use the dispatch from the store provider
@@ -101,4 +116,30 @@ export default function ProductScreen() {
       </div>
     </Layout>
   );
+}
+
+// Define getServerSideProps ( async function )
+// Paramenter: context
+export async function getServerSideProps(context) {
+  const { params } = context; // get the params in url from the context
+  const { slug } = params; // get the slug from the params in the url
+
+  // connect to the database
+  await db.connect();
+
+  /* use findOne on the Product Model and filter products
+  based on  slug in the url, then use the lean to  convert it to
+  JavaScript object and put it inside the props*/
+  const product = await Product.findOne({ slug }).lean();
+  // diconnecting from the database
+  await db.disconnect();
+  // return the props object
+  return {
+    props: {
+      product: product // true
+        ? db.convertDocToObj(product) // use convertDocToObj
+        : // false
+          null, // put null in the product
+    },
+  };
 }

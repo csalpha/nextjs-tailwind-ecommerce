@@ -118,3 +118,11 @@
 
     1. create a Product Model
     2. seed products to the Database
+
+16. Load Products from Database instead of getting products from data.js
+
+    1. fetch products from the MongoDb
+    2. list products in the home screen
+    3. list products in the details page
+    4. when user click in add to cart, check the quantity of product
+    5. show error message if product is out of stock

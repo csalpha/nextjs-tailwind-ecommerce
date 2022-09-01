@@ -7,6 +7,8 @@ import { Store } from '../utils/Store';
 import { useRouter } from 'next/router';
 // render the cart page only on client side
 import dynamic from 'next/dynamic';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 function CartScreen() {
   const router = useRouter();
@@ -22,14 +24,29 @@ function CartScreen() {
     dispatch({ type: 'CART_REMOVE_ITEM', payload: item });
   };
 
-  const updateCartHandler = (item, qty /* new quantity of the item */) => {
+  const updateCartHandler = async (
+    item,
+    qty /* new quantity of the item */
+  ) => {
     const quantity = Number(qty); // cast qty to number
+
+    /*when  we put a id in this api, 
+      api is be called and the product
+      will be returned in a data variable*/
+    const { data } = await axios.get(`/api/products/${item._id}`);
+
+    /* check the countInStock in the database to make sure that we have
+    stock/quantity in the database */
+    if (data.countInStock < quantity) {
+      return toast.error('Sorry, this item is temporarily out of stock');
+    }
     dispatch(
       {
         type: 'CART_ADD_ITEM', //string
         payload: { ...item, quantity }, // object
       } //object
     );
+    toast.success('Product updated in the cart');
   };
 
   // return a page that shows list of items in the cart

@@ -50,6 +50,20 @@ async function disconnect() {
   }
 }
 
+// define convertDocToObj function
+/* convert the mongoose object to plain javascript object,
+and it's can be serialized in next.js */
+function convertDocToObj(doc) {
+  /* convert the id of each doc to a string and 
+     replace the object id  with the string of it */
+  doc._id = doc._id.toString();
+  doc.createdAt = doc.createdAt.toString();
+  doc.updatedAt = doc.updatedAt.toString();
+
+  // return doc object
+  return doc;
+}
+
 // define db object
-const db = { connect, disconnect };
+const db = { connect, disconnect, convertDocToObj };
 export default db;
