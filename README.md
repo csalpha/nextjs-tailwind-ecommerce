@@ -135,3 +135,12 @@
     3. in pages/api/orders/index.js we created an api to create an order
     4. in the models/Order.js, we create a model to save order information
     5. in Store.jsx, we implement action 'CART_CLEAR_ITEMS'
+
+18. Create Order Details Screen
+
+    1. in pages/api/orders/[id].js, create an api to
+       return the order information based on the order id
+    2. in pages/order/[id].js, create a page to fetch order
+       id from backend and show order information on the screen
+    3. in styles/globals.css, we added to classes to show error message
+       and successful message

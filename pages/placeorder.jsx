@@ -239,5 +239,6 @@ export default function PlaceOrderScreen() {
     </Layout>
   );
 }
-// make PlaceOrderScreen.auth to true
+/* make PlaceOrderScreen authenticated 
+only authenticated user can have access to this page*/
 PlaceOrderScreen.auth = true;

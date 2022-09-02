@@ -119,6 +119,6 @@ export default function PaymentScreen() {
   );
 }
 
-/* make PaymentScreen.auth to true 
-   make this authenticated */
+/* make PaymentScreen authenticated 
+only authenticated user can have access to this page*/
 PaymentScreen.auth = true;
