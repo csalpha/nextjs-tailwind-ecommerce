@@ -144,3 +144,9 @@
        id from backend and show order information on the screen
     3. in styles/globals.css, we added to classes to show error message
        and successful message
+
+19. Create Register Screen
+
+    1. in /api/auth/signup.js, we created a sign up api
+    2. in pages/login.js we changed the href
+    3. in pages/register.js we create a new page to register the user
