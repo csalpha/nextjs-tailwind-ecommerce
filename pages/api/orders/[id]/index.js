@@ -3,8 +3,8 @@
 /* [id] is a parameter and we are going to get 
    the id at this address: ' /api/orders/:id' */
 import { getSession } from 'next-auth/react';
-import Order from '../../../models/Order';
-import db from '../../../utils/db';
+import Order from '../../../../models/Order';
+import db from '../../../../utils/db';
 
 /* handler is an async function that accept
    request and response as parameter */

@@ -5,6 +5,8 @@ import { useRouter } from 'next/router';
 import { useEffect, useReducer } from 'react';
 import Layout from '../../components/Layout';
 import { getError } from '../../utils/error';
+import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
+import { toast } from 'react-toastify';
 
 // define reducer function
 function reducer(state, action) {
@@ -36,6 +38,39 @@ function reducer(state, action) {
         loading: false, // change loading to false
         error: action.payload, // error is coming from the action.payload
       };
+    /* define 'PAY_REQUEST' case, it happens when 
+    i'm going to update a state of payment of current 
+    in the backend*/
+    case 'PAY_REQUEST':
+      return {
+        ...state,
+        loadingPay: true, //  change loadingPay to true
+      };
+    /*define 'PAY_SUCCESS' case,
+    when we update the state of payment */
+    case 'PAY_SUCCESS':
+      return {
+        ...state, // keep previous state
+        loadingPay: false, // set loadingPay to false
+        successPay: true, // change the successPay to true
+      };
+    /* define 'PAY_FAIL' case, if there is an error
+    pay fail */
+    case 'PAY_FAIL':
+      return {
+        ...state,
+        loadingPay: false,
+        errorPay: action.payload, // fill errorPay with the action.payload
+      };
+    /* Define 'PAY_RESET' case, */
+    case 'PAY_RESET':
+      return {
+        ...state,
+        loadingPay: false, // set loadingPay to false
+        successPay: false, // set successPay to false
+        errorPay: '', // set errorPay to empty string
+      };
+
     // default case
     default:
       // return state as it is
@@ -45,6 +80,12 @@ function reducer(state, action) {
 
 // create OrderScreen function
 function OrderScreen() {
+  /* get isPending (state) and paypalDispatch 
+  from usePayPalScriptReducer ( hook from paypal ) */
+  const [
+    { isPending },
+    paypalDispatch, // to reset the options and set the clientId for paypal
+  ] = usePayPalScriptReducer();
   // OrderScreen implement
   // order/:id
   // get query from useRouter hook
@@ -53,16 +94,17 @@ function OrderScreen() {
   const orderId = query.id;
 
   // define a reducer using useReducer hook
-  // first: get { loading, error, order } from  the reducer hook
+  // first: get { loading, error, order, successPay, loadingPay } from  the reducer hook
   // second: get dispatch from the reducer hook, to dispatch actions
-  const [{ loading, error, order }, dispatch] = useReducer(
-    reducer, // first parameter: reducer function
-    {
-      loading: true, // set loading to true
-      order: {}, // set the order to empty object
-      error: '', // set the error to empty string
-    } // second parameter is default value
-  );
+  const [{ loading, error, order, successPay, loadingPay }, dispatch] =
+    useReducer(
+      reducer, // first parameter: reducer function
+      {
+        loading: true, // set loading to true
+        order: {}, // set the order to empty object
+        error: '', // set the error to empty string
+      } // second parameter is default value
+    );
   /* define useEffect, because we gonna send
   an ajax request to backend on page load */
 
@@ -91,8 +133,12 @@ function OrderScreen() {
       }
     };
     // condiction for calling fetchOrder function
+    /* if successPay does exist we need to fetch order,
+    because we going to update the state of the order 
+    based on the latest data from backend */
     if (
       !order._id || // if order._id does not exist or
+      successPay || // if successPay does exist we need to fetch order
       (order._id && order._id !== orderId) /* if order._id does exists but
       order._id does not equal to orderId in the url, it means that we have 
        order but it's about previously visited order id */
@@ -100,10 +146,37 @@ function OrderScreen() {
       /* call fetchOrder function to fetch order for 
        the new order in the url */
       fetchOrder();
+      // check successPay
+      if (successPay) {
+        // if condiction is true
+        dispatch({ type: 'PAY_RESET' }); /* dispatch PAY_RESET 
+        reset payment status for the next orders */
+      }
+    } else {
+      // define loadPaypalScript
+      const loadPaypalScript = async () => {
+        /* To get the clientId use, axios.get
+        with address: '/api/keys/paypal' */
+        const { data: clientId } = await axios.get('/api/keys/paypal');
+        // use paypalDispatch to set the client id for the paypal script
+        paypalDispatch({
+          type: 'resetOptions', // dispatch resetOptions
+          value: {
+            'client-id': clientId,
+            currency: 'EUR', // set the currency to 'EUR'
+          },
+        });
+        // dispatch setLoadingStatus to pending
+        paypalDispatch({ type: 'setLoadingStatus', value: 'pending' });
+      };
+      // call async function
+      loadPaypalScript();
     }
   }, [
     order,
     orderId,
+    paypalDispatch, // add paypalDispatch to dependecy array
+    successPay,
   ]); /* if there is a change in the order or orderId, useEffect 
   runs again */
 
@@ -121,6 +194,73 @@ function OrderScreen() {
     isDelivered,
     deliveredAt,
   } = order;
+
+  /* define createOrder function that 
+  accept two parameter*/
+  function createOrder(
+    data, // first parameter
+    actions // second parameter
+  ) {
+    /* return actions.order and call create method on order object */
+    return actions.order
+      .create({
+        //pass purchase_units parameter ( array with an object)
+        purchase_units: [
+          // array
+          {
+            // objct
+            // amount object
+            amount: { value: totalPrice }, //
+          },
+        ],
+      }) // return a promise
+      .then((orderID) => {
+        // call then function and get the orderId
+        return orderID; // return orderID
+      });
+  }
+
+  // define onApprove function
+  function onApprove(data, actions) {
+    return (
+      actions.order
+        .capture() /* confirm the payment */
+        /* return a promisse */
+        .then(async function (
+          details // get the details
+        ) {
+          // update state of order in the backend
+          try {
+            // dispatch 'PAY_REQUEST' to show a loading message
+            dispatch({ type: 'PAY_REQUEST' });
+            /*call api with put method on address `/api/orders/${order._id}/pay`
+             */
+            const { data } = await axios.put(
+              `/api/orders/${order._id}/pay`,
+              details // pass the details from the paypal
+            );
+            // dispatch 'PAY_SUCCESS'
+            dispatch({ type: 'PAY_SUCCESS', payload: data });
+            // show message 'Order is paid successfully'
+            toast.success('Order is paid successfully');
+          } catch (err) {
+            // if there is an error dispatch 'PAY_FAIL'
+            dispatch({
+              type: 'PAY_FAIL', // dispatch 'PAY_FAIL'
+              payload: getError(err),
+            }); // fill payload with error
+            /* error message */
+            toast.error(getError(err));
+          }
+        })
+    );
+  }
+
+  // define onError function
+  function onError(err) {
+    // show the error message
+    toast.error(getError(err));
+  }
 
   return (
     // create Layout, with title
@@ -221,9 +361,9 @@ function OrderScreen() {
                         </td>
                         {/* Show the item information */}
                         <td className=" p-5 text-right">{item.quantity}</td>
-                        <td className="p-5 text-right">${item.price}</td>
+                        <td className="p-5 text-right">{item.price} €</td>
                         <td className="p-5 text-right">
-                          ${item.quantity * item.price}
+                          {item.quantity * item.price} €
                         </td>
                       </tr>
                     )
@@ -246,7 +386,7 @@ function OrderScreen() {
                 <li>
                   <div className="mb-2 flex justify-between">
                     <div>Items</div>
-                    <div>${itemsPrice}</div>
+                    <div>{itemsPrice} €</div>
                   </div>
                 </li>{' '}
                 {/* second li: tax price */}
@@ -256,23 +396,53 @@ function OrderScreen() {
                   and the value in the right side */}
                   <div className="mb-2 flex justify-between">
                     <div>Tax</div>
-                    <div>${taxPrice}</div>
+                    <div>{taxPrice} €</div>
                   </div>
                 </li>
                 {/* third li: shippingPrice */}
                 <li>
                   <div className="mb-2 flex justify-between">
                     <div>Shipping</div>
-                    <div>${shippingPrice}</div>
+                    <div>{shippingPrice} €</div>
                   </div>
                 </li>
                 {/* fourth li: totalPrice */}
                 <li>
                   <div className="mb-2 flex justify-between">
                     <div>Total</div>
-                    <div>${totalPrice}</div>
+                    <div>{totalPrice} €</div>
                   </div>
                 </li>
+                {/* Code to the paypal button */}
+                {/* Condictional rendering */}
+                {/* check isPaid */}
+                {!isPaid && (
+                  <li>
+                    {/* check isPending */}
+                    {/* check loading of paypal script */}
+                    {isPending ? ( // if isPending
+                      /* show loading */
+                      <div>Loading...</div>
+                    ) : (
+                      /* otherwise, render PayPalButtons */
+                      <div className="w-full">
+                        <PayPalButtons
+                          /* set createOrder */
+                          createOrder={createOrder}
+                          /* set onApprove */
+                          onApprove={onApprove}
+                          /* set onError */
+                          onError={onError}
+                        ></PayPalButtons>
+                      </div>
+                    )}
+                    {/* check loadingPay */}
+                    {loadingPay && ( // if it's true
+                      // show loading box
+                      <div>Loading...</div>
+                    )}
+                  </li>
+                )}
               </ul>
             </div>
           </div>

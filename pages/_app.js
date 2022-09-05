@@ -2,6 +2,7 @@ import '../styles/globals.css';
 import { SessionProvider, useSession } from 'next-auth/react';
 import { StoreProvider } from '../utils/Store';
 import { useRouter } from 'next/router';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 function MyApp({
   Component,
@@ -13,15 +14,18 @@ function MyApp({
     // we can have the session in all pages
     <SessionProvider session={session}>
       <StoreProvider>
-        {/* Check Component.auth */}
-        {Component.auth ? ( // if it's true render <Auth> Component
-          <Auth>
+        {/* Define PayPalScriptProvider  and make deferLoading to true */}
+        <PayPalScriptProvider deferLoading={true}>
+          {/* Check Component.auth */}
+          {Component.auth ? ( // if it's true render <Auth> Component
+            <Auth>
+              <Component {...pageProps} />
+            </Auth>
+          ) : (
+            // otherwise render the component as it is
             <Component {...pageProps} />
-          </Auth>
-        ) : (
-          // otherwise render the component as it is
-          <Component {...pageProps} />
-        )}
+          )}
+        </PayPalScriptProvider>
       </StoreProvider>
     </SessionProvider>
   );

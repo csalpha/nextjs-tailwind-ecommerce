@@ -148,5 +148,24 @@
 19. Create Register Screen
 
     1. in /api/auth/signup.js, we created a sign up api
-    2. in pages/login.js we changed the href
+       ( create a new user in the database and return that user )
+    2. in pages/login.js we changed the href 'Don't have an account?',
+       to include the redirect in the query string
     3. in pages/register.js we create a new page to register the user
+
+20. Implement Payment by PayPal
+
+    1. in a package.json we installed package for react
+       npm i @paypal/react-paypal-js
+    2. in models/Order.js we added payment result to save the
+       status, email, address of the payer
+    3. in pages/api/keys/paypal.js, we created an api to get
+       the paypal client id
+    4. in pages/api/orders/[id]/pay.js
+    5. in pages/order/[id].js we rename [id].js in order folder
+       to index.js iside [id] folder
+    6. in pages/api/orders/[id]/pay.js, we created payment backend api
+       to update the state of the order after payment in paypal
+    7. in pages/order/[id].js, display the paypal button and handle
+       paying the order
+    8. in pages/\_app.js we use the PayPalScriptProvider
