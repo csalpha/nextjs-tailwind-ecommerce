@@ -169,3 +169,10 @@
     7. in pages/order/[id].js, display the paypal button and handle
        paying the order
     8. in pages/\_app.js we use the PayPalScriptProvider
+
+21. Create Order History
+
+    1. in pages/api/orders/history.js we created an api to return
+       all orders by current user
+    2. pages/order-history.jsx we created a component to list
+       all orders of current user
