@@ -31,7 +31,7 @@ export default function ShippingScreen() {
   /*fill the input boxes based on the data in the 
   shipping address in the context*/
   useEffect(() => {
-    /* field the input boxes based on the data in the react context */
+    /* fill the input boxes based on the data in the react context */
     /* set the fullName input box with the 
     full name in the shipping address field 
     do the same for address, city, postalCode, country */
@@ -111,6 +111,7 @@ export default function ShippingScreen() {
             id="address"
             {...register(
               'address', // register address
+              // validation options
               {
                 required: 'Please enter address', // address is required
                 minLength: {

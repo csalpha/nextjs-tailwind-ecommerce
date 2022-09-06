@@ -176,3 +176,10 @@
        all orders by current user
     2. pages/order-history.jsx we created a component to list
        all orders of current user
+
+22. Update User Profile
+
+    1. in pages/api/auth/update.js create api to update the user
+       in the database
+    2. in pages/profile.js created profile screen to update the
+       user profile
