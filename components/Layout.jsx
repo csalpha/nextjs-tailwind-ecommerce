@@ -86,6 +86,18 @@ export default function Layout({ title, children }) {
                         Order History
                       </DropdownLink>
                     </Menu.Item>
+                    {/* check */}
+                    {session.user.isAdmin && ( // if session.user.isAdmin is true
+                      /* Create Admin Menu */
+                      <Menu.Item>
+                        <DropdownLink
+                          className="dropdown-link"
+                          href="/admin/dashboard"
+                        >
+                          Admin Dashboard
+                        </DropdownLink>
+                      </Menu.Item>
+                    )}
                     <Menu.Item>
                       <a
                         className="dropdown-link"

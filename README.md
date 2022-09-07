@@ -181,5 +181,14 @@
 
     1. in pages/api/auth/update.js create api to update the user
        in the database
-    2. in pages/profile.js created profile screen to update the
+    2. in pages/profile.jsx created profile screen to update the
        user profile
+
+23. Create Admin Dashboard
+
+    1. in components/Layout.jsx we created an menu item to user admin
+    2. in package.json install chart.js ( npm install chart.js ), and
+       install react-chartjs-2 ( npm i react-chartjs-2 chart.js )
+    3. in pages/\_app.js we set admin only
+    4. in pages/admin/dashboard.jsx we created the Dashboard Screen
+    5. in pages/api/admin/summary.js we implement admin summary api

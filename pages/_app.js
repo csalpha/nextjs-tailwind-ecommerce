@@ -18,7 +18,8 @@ function MyApp({
         <PayPalScriptProvider deferLoading={true}>
           {/* Check Component.auth */}
           {Component.auth ? ( // if it's true render <Auth> Component
-            <Auth>
+            /* set adminOnly to Component.auth.adminOnly  */
+            <Auth adminOnly={Component.auth.adminOnly}>
               <Component {...pageProps} />
             </Auth>
           ) : (
@@ -32,20 +33,23 @@ function MyApp({
 }
 
 // implement Auth function
-function Auth({ children }) {
+function Auth(
+  { children, adminOnly } /* pass object with children and adminOnly */
+) {
   // get the router from useRouter()
   const router = useRouter();
   // useSession Hook
-  const { status } = useSession({
-    // only logged in user can access to it
-    required: true, // set required to true
+  const { status, data: session /* get session from useSession hook */ } =
+    useSession({
+      // only logged in user can access to it
+      required: true, // set required to true
 
-    // if the user does not login:
-    onUnauthenticated() {
-      // redirect to unauthorized page, set the message to login required
-      router.push('/unauthorized?message=login required');
-    },
-  });
+      // if the user does not login:
+      onUnauthenticated() {
+        // redirect to unauthorized page, set the message to login required
+        router.push('/unauthorized?message=login required');
+      },
+    });
 
   /* check the status */
   if (status === 'loading') {
@@ -53,8 +57,15 @@ function Auth({ children }) {
     return <div>Loading...</div>; // Show loading
   }
 
+  if (adminOnly /* if adminOnly is true  */ && !session.user.isAdmin) {
+    /* and session.user.isAdmin isn't true */
+    // redirect to unauthorized page, set the message to admin login required
+    router.push('/unauthorized?message=admin login required');
+  }
+
   // if it's not loading show the children Component
   return children;
 }
 
+// export MyApp
 export default MyApp;
