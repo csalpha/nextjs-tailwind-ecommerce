@@ -39,11 +39,24 @@ function reducer(state /* first parameter */, action /* second parameter */) {
   // define switch case
   switch (action.type) {
     case 'FETCH_REQUEST':
-      return { ...state, loading: true, error: '' };
+      return {
+        ...state, // keep previous state
+        loading: true, // set loading to true
+        error: '', // set error to empty string
+      };
     case 'FETCH_SUCCESS':
-      return { ...state, loading: false, summary: action.payload, error: '' };
+      return {
+        ...state, // keep previous state
+        loading: false, // set loading to false
+        summary: action.payload,
+        error: '',
+      };
     case 'FETCH_FAIL':
-      return { ...state, loading: false, error: action.payload };
+      return {
+        ...state, // keep previous state
+        loading: false, // set loading to false
+        error: action.payload,
+      };
     default:
       state;
   }

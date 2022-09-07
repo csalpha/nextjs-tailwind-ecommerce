@@ -192,3 +192,9 @@
     3. in pages/\_app.js we set admin only
     4. in pages/admin/dashboard.jsx we created the Dashboard Screen
     5. in pages/api/admin/summary.js we implement admin summary api
+
+24. List Orders For Admin
+
+    1. in pages/admin/orders.jsx we created orders page
+    2. in pages/api/admin/orders.js we created orders api
+    3. use orders api in orders page
