@@ -1,8 +1,8 @@
 import axios from 'axios';
 import Link from 'next/link';
 import React, { useEffect, useReducer } from 'react';
-import Layout from '../../components/Layout';
-import { getError } from '../../utils/error';
+import Layout from '../../../components/Layout';
+import { getError } from '../../../utils/error';
 
 /* define reducer that accept two parameters */
 function reducer(state, action) {

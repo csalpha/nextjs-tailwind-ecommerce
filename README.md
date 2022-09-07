@@ -198,3 +198,9 @@
     1. in pages/admin/orders.jsx we created orders page
     2. in pages/api/admin/orders.js we created orders api
     3. use orders api in orders page
+
+25. Deliver Order For Admin
+
+    1.  pages/api/admin/orders/[id]/deliver.js create deliver api
+    2.  in pages/order/[id].js add deliver button
+    3.  implement click handler

@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useReducer } from 'react';
+import { useSession } from 'next-auth/react';
 import Layout from '../../components/Layout';
 import { getError } from '../../utils/error';
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
@@ -70,6 +71,19 @@ function reducer(state, action) {
         successPay: false, // set successPay to false
         errorPay: '', // set errorPay to empty string
       };
+    // case action.type equal to 'DELIVER_REQUEST'
+    case 'DELIVER_REQUEST':
+      return { ...state, loadingDeliver: true };
+    case 'DELIVER_SUCCESS':
+      return { ...state, loadingDeliver: false, successDeliver: true };
+    case 'DELIVER_FAIL':
+      return { ...state, loadingDeliver: false };
+    case 'DELIVER_RESET':
+      return {
+        ...state,
+        loadingDeliver: false,
+        successDeliver: false,
+      };
 
     // default case
     default:
@@ -82,6 +96,8 @@ function reducer(state, action) {
 function OrderScreen() {
   /* get isPending (state) and paypalDispatch 
   from usePayPalScriptReducer ( hook from paypal ) */
+  // get session from useSession hook
+  const { data: session } = useSession();
   const [
     { isPending },
     paypalDispatch, // to reset the options and set the clientId for paypal
@@ -96,15 +112,25 @@ function OrderScreen() {
   // define a reducer using useReducer hook
   // first: get { loading, error, order, successPay, loadingPay } from  the reducer hook
   // second: get dispatch from the reducer hook, to dispatch actions
-  const [{ loading, error, order, successPay, loadingPay }, dispatch] =
-    useReducer(
-      reducer, // first parameter: reducer function
-      {
-        loading: true, // set loading to true
-        order: {}, // set the order to empty object
-        error: '', // set the error to empty string
-      } // second parameter is default value
-    );
+  const [
+    {
+      loading,
+      error,
+      order,
+      successPay,
+      loadingPay,
+      loadingDeliver,
+      successDeliver,
+    },
+    dispatch,
+  ] = useReducer(
+    reducer, // first parameter: reducer function
+    {
+      loading: true, // set loading to true
+      order: {}, // set the order to empty object
+      error: '', // set the error to empty string
+    } // second parameter is default value
+  );
   /* define useEffect, because we gonna send
   an ajax request to backend on page load */
 
@@ -139,6 +165,7 @@ function OrderScreen() {
     if (
       !order._id || // if order._id does not exist or
       successPay || // if successPay does exist we need to fetch order
+      successDeliver || // if successDeliver does exist we need to fetch order
       (order._id && order._id !== orderId) /* if order._id does exists but
       order._id does not equal to orderId in the url, it means that we have 
        order but it's about previously visited order id */
@@ -151,6 +178,11 @@ function OrderScreen() {
         // if condiction is true
         dispatch({ type: 'PAY_RESET' }); /* dispatch PAY_RESET 
         reset payment status for the next orders */
+      }
+      // check successDeliver
+      if (successDeliver) {
+        dispatch({ type: 'DELIVER_RESET' }); /* dispatch DELIVER_RESET 
+         status */
       }
     } else {
       // define loadPaypalScript
@@ -176,6 +208,7 @@ function OrderScreen() {
     order,
     orderId,
     paypalDispatch, // add paypalDispatch to dependecy array
+    successDeliver,
     successPay,
   ]); /* if there is a change in the order or orderId, useEffect 
   runs again */
@@ -260,6 +293,22 @@ function OrderScreen() {
   function onError(err) {
     // show the error message
     toast.error(getError(err));
+  }
+
+  // define deliverOrderHandler function
+  async function deliverOrderHandler() {
+    try {
+      dispatch({ type: 'DELIVER_REQUEST' });
+      const { data } = await axios.put(
+        `/api/admin/orders/${order._id}/deliver`,
+        {}
+      );
+      dispatch({ type: 'DELIVER_SUCCESS', payload: data });
+      toast.success('Order is delivered');
+    } catch (err) {
+      dispatch({ type: 'DELIVER_FAIL', payload: getError(err) });
+      toast.error(getError(err));
+    }
   }
 
   return (
@@ -441,6 +490,19 @@ function OrderScreen() {
                       // show loading box
                       <div>Loading...</div>
                     )}
+                  </li>
+                )}
+                {/* check session.user.isAdmin */}
+                {session.user.isAdmin && order.isPaid && !order.isDelivered && (
+                  <li>
+                    {loadingDeliver && <div>Loading...</div>}
+                    {/* add deliver button */}
+                    <button
+                      className="primary-button w-full"
+                      onClick={deliverOrderHandler}
+                    >
+                      Deliver Order
+                    </button>
                   </li>
                 )}
               </ul>
