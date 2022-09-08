@@ -167,21 +167,25 @@ function AdminDashboardScreen() {
             // otherwise
             <div>
               <div className="grid grid-cols-1 md:grid-cols-4">
+                {/* first card:  margin-5 padding-5 */}
                 <div className="card m-5 p-5">
                   <p className="text-3xl">{summary.ordersPrice} €</p>
                   <p>Sales</p>
                   <Link href="/admin/orders">View sales</Link>
                 </div>
+                {/* second card: margin-5 padding-5 */}
                 <div className="card m-5 p-5">
                   <p className="text-3xl">{summary.ordersCount} </p>
                   <p>Orders</p>
                   <Link href="/admin/orders">View orders</Link>
                 </div>
+                {/* third card: margin-5 padding-5 */}
                 <div className="card m-5 p-5">
                   <p className="text-3xl">{summary.productsCount} </p>
                   <p>Products</p>
                   <Link href="/admin/products">View products</Link>
                 </div>
+                {/* fourth card: margin-5 padding-5 */}
                 <div className="card m-5 p-5">
                   <p className="text-3xl">{summary.usersCount} </p>
                   <p>Users</p>

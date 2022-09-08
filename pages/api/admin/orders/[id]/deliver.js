@@ -12,6 +12,7 @@ const handler = async (
     req, // request
   });
 
+  // check session
   if (
     !session /* if session is false */ ||
     /* Or */ (session /* session does exist */ /* and */ /* and */ &&

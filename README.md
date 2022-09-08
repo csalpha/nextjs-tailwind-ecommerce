@@ -204,3 +204,9 @@
     1.  pages/api/admin/orders/[id]/deliver.js create deliver api
     2.  in pages/order/[id].js add deliver button
     3.  implement click handler
+
+26. List Products For Admin
+
+    1. in pages/admin/products.js we created products page
+    2. in pages/api/admin/products/index.js create products api
+    3. use api in products page
