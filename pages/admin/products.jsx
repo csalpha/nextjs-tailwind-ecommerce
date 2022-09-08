@@ -39,15 +39,7 @@ function reducer(state, action) {
 // export AdminProdcutsScreen
 export default function AdminProdcutsScreen() {
   // array is coming from useReducer
-  const [
-    {
-      loading,
-      error,
-      products,
-    } /* object that contains loading, error, products  */,
-    ,
-    dispatch,
-  ] = useReducer(
+  const [{ loading, error, products }, dispatch] = useReducer(
     reducer, // first parameter: reducer function
     {
       loading: true, // set loading to true
@@ -67,9 +59,7 @@ export default function AdminProdcutsScreen() {
           dispatch({ type: 'FETCH_REQUEST' });
           // call api on page load using useEffect
           // get data from backend using axios.get
-          const { data } = await axios.get(
-            `/api/admin/products` // address api
-          );
+          const { data } = await axios.get(`/api/admin/products`);
           // dispatch 'FETCH_SUCCESS' action
           dispatch({
             type: 'FETCH_SUCCESS', // action.type
