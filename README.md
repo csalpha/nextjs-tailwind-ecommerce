@@ -216,3 +216,13 @@
     1. In pages/api/admin/products/[id]/index.js we created an api for product
     2. In pages/admin/product/[id].js we created the edit page
     3. show product data in form
+
+28. Upload Product Image
+
+    1. in bash console install cloudinary
+       npm install cloudinary
+    2. in pages/admin/product/[id].js we implemet uploadHandler
+    3. create cloudinary account in https://cloudinary.com/users/register/free
+    4. get cloudinary keys
+    5. in pages/api/admin/cloudinary-sign.js create upload api
+    6. upload files in edit page

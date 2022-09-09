@@ -32,6 +32,45 @@ function reducer(state, action) {
         loading: false, // set loading to false
         error: action.payload, // error is coming from action.payload
       };
+    /* case action.type is 'UPDATE_REQUEST' */
+    case 'UPDATE_REQUEST':
+      return {
+        ...state, // keep previous state
+        loadingUpdate: true, // set loadingUpdate to true
+        errorUpdate: '', // set errorUpdate to empty string
+      };
+    case 'UPDATE_SUCCESS':
+      return {
+        ...state, // keep previous state
+        loadingUpdate: false, // set loadingUpdate to false
+        errorUpdate: '', // set errorUpdate to empty string
+      };
+    case 'UPDATE_FAIL':
+      return {
+        ...state, // keep previous state
+        loadingUpdate: false, // set loadingUpdate to false
+        errorUpdate: action.payload, // errorUpdate is coming from action.payload
+      };
+
+    case 'UPLOAD_REQUEST':
+      return {
+        ...state, // keep previous state
+        loadingUpload: true, // set loadingUpdate to false
+        errorUpload: '', // set errorUpdate to empty string
+      };
+    case 'UPLOAD_SUCCESS':
+      return {
+        ...state, // keep previous state
+        loadingUpload: false, // set loadingUpdate to false
+        errorUpload: '', // set errorUpdate to empty string
+      };
+    case 'UPLOAD_FAIL':
+      return {
+        ...state, // keep previous state
+        loadingUpload: false, // set loadingUpdate to false
+        errorUpload: action.payload, // errorUpdate is coming from action.payload
+      };
+
     // default case
     default:
       // return state as it is
@@ -47,15 +86,16 @@ export default function AdminProductEditScreen() {
   const productId = query.id;
 
   // define a reducer using useReducer hook
-  // first: get { loading, error, loadingUpdate } from  the reducer hook
+  // first: get { loading, error, loadingUpdate, loadingUpload  } from  the reducer hook
   // second: get dispatch from the reducer hook, to dispatch actions
-  const [{ loading, error, loadingUpdate }, dispatch] = useReducer(
-    reducer, // first parameter: reducer
-    {
-      loading: true, // set loading to true
-      error: '', // set error to empty string
-    } // second parameter: an object
-  );
+  const [{ loading, error, loadingUpdate, loadingUpload }, dispatch] =
+    useReducer(
+      reducer, // first parameter: reducer
+      {
+        loading: true, // set loading to true
+        error: '', // set error to empty string
+      } // second parameter: an object
+    );
 
   // get object from useForm
   const {
@@ -80,14 +120,14 @@ export default function AdminProductEditScreen() {
           const { data } = await axios.get(`/api/admin/products/${productId}`);
           // dispatch FETCH_SUCCESS action.type
           dispatch({ type: 'FETCH_SUCCESS' });
-          setValue('name', data.name);
-          setValue('slug', data.slug);
-          setValue('price', data.price);
-          setValue('image', data.image);
-          setValue('category', data.category);
-          setValue('brand', data.brand);
-          setValue('countInStock', data.countInStock);
-          setValue('description', data.description);
+          setValue('name', data.name); // set value 'data.name' in input box with id='name'
+          setValue('slug', data.slug); // set value 'data.slug' in input box with id='slug'
+          setValue('price', data.price); // set value 'data.price' in input box with id='price'
+          setValue('image', data.image); // set value 'data.image' in input box with id='image'
+          setValue('category', data.category); // set value 'data.category' in input box with id='category'
+          setValue('brand', data.brand); // set value 'data.brand' in input box with id='brand'
+          setValue('countInStock', data.countInStock); // set value 'data.countInStock' in input box with id='countInStock'
+          setValue('description', data.description); // set value 'data.description' in input box with id='description'
           // if there is an error
         } catch (err) {
           // dispatch FETCH_FAIL action.type
@@ -102,6 +142,69 @@ export default function AdminProductEditScreen() {
 
   // get router from useRouter hook
   const router = useRouter();
+
+  // define uploadHandler ( async function )
+  const uploadHandler = async (e, imageField = 'image') => {
+    // define url
+    const url = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`;
+
+    // try catch
+    try {
+      // dispatch action.type: UPLOAD_REQUEST
+      dispatch({ type: 'UPLOAD_REQUEST' });
+
+      //get signature and timestamp from backend using axios('/api/admin/cloudinary-sign')
+      const {
+        data: { signature, timestamp },
+      } = await axios('/api/admin/cloudinary-sign');
+
+      // get file from e.target.files[0]
+      const file = e.target.files[0];
+
+      // create a new instance of FormData ( form data is an object)
+      const formData = new FormData();
+
+      // append: inserts a set of Node objects or string objects after the last child of the Element
+      formData.append(
+        'file', // name
+        file // value
+      );
+      formData.append(
+        'signature', // name
+        signature // value
+      );
+      formData.append(
+        'timestamp', // name
+        timestamp // value
+      );
+      formData.append(
+        'api_key', // name
+        process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY // value
+      );
+      // get data using axios.post
+      const { data } = await axios.post(
+        url, // pass url
+        formData // pass formData
+      );
+      // dispatch action.type UPLOAD_SUCCESS
+      dispatch({ type: 'UPLOAD_SUCCESS' });
+
+      setValue(
+        imageField, // 1st param: name
+        data.secure_url // 2nd param: value
+      );
+      // show success message
+      toast.success('File uploaded successfully');
+      // if there is an error
+    } catch (err) {
+      dispatch({
+        type: 'UPLOAD_FAIL', // dispatch action.type UPLOAD_FAIL
+        payload: getError(err), // fill payload with error
+      });
+      // show error message
+      toast.error(getError(err));
+    }
+  };
 
   /* define submitHandler (async function)
   that accept an object with product data */
@@ -263,6 +366,22 @@ export default function AdminProductEditScreen() {
                   <div className="text-red-500">{errors.image.message}</div>
                 )}
               </div>
+
+              <div className="mb-4">
+                <label htmlFor="imageFile">Upload image</label>
+                <input
+                  type="file"
+                  className="w-full"
+                  id="imageFile" // connect input to label using htmlFor
+                  onChange={uploadHandler}
+                />
+
+                {loadingUpload /* loadingUpload is true */ /* AND */ && (
+                  /* Show  Uploading.... */
+                  <div>Uploading....</div>
+                )}
+              </div>
+
               <div className="mb-4">
                 <label htmlFor="category">category</label>
                 <input
