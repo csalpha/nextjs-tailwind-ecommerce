@@ -210,3 +210,9 @@
     1. in pages/admin/products.js we created products page
     2. in pages/api/admin/products/index.js create products api
     3. use api in products page
+
+27. Create Product Edit Page
+
+    1. In pages/api/admin/products/[id]/index.js we created an api for product
+    2. In pages/admin/product/[id].js we created the edit page
+    3. show product data in form

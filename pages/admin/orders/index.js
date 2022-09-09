@@ -20,7 +20,7 @@ function reducer(state, action) {
       return {
         ...state, // keep previous state
         loading: false, // set loading to false
-        orders: action.payload, // orders is coming from action.payload+
+        orders: action.payload, // orders is coming from action.payload
         error: '', // set error to empty string
       };
     /* case action.type is 'FETCH_FAIL' */

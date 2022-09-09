@@ -34,6 +34,7 @@ const handler = async (
   }
 };
 
+// define getHandler
 const getHandler = async (
   req, // request
   res // response
