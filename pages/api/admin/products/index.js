@@ -25,8 +25,17 @@ const handler = async (
   if (req.method === 'GET') {
     // if request method is equal to 'GET'
     return getHandler(
-      req, // request
-      res // response
+      req, // 1st param: rquest
+      res // 2nd param: response
+    );
+  }
+  // check request method
+  else if (req.method === 'POST') {
+    // if it's 'POST'
+    // return postHandler ( async funtion )
+    return postHandler(
+      req, // 1st param: rquest
+      res // 2nd param: response
     );
   } else {
     // return response: status code 400 and send message error 'Method not allowed'
@@ -34,7 +43,40 @@ const handler = async (
   }
 };
 
-// define getHandler
+// define postHandler ( async function )
+const postHandler = async (
+  req, // request
+  res // response
+) => {
+  // connect to database
+  await db.connect();
+
+  // create new product
+  const newProduct = new Product({
+    name: 'sample name',
+    slug: 'sample-name-' + Math.random(),
+    image: '/images/shirt1.jpg',
+    price: 0,
+    category: 'sample category',
+    brand: 'sample brand',
+    countInStock: 0,
+    description: 'sample description',
+    rating: 0,
+    numReviews: 0,
+  });
+
+  // save product
+  const product = await newProduct.save();
+  // disconnect from the database
+  await db.disconnect();
+  // call send method
+  res.send({
+    message: 'Product created successfully', // 1st param
+    product, // 2nd param
+  });
+};
+
+// define getHandler ( async function )
 const getHandler = async (
   req, // request
   res // response

@@ -226,3 +226,10 @@
     4. get cloudinary keys
     5. in pages/api/admin/cloudinary-sign.js create upload api
     6. upload files in edit page
+
+29. Create And Delete Products
+
+    1. in pages/admin/products.jsx we add 'create product button',
+       add createHandler and deleteHandler ( async functions )
+    2. in pages/api/admin/products/[id]/index.jsx we implement delete api
+    3. in pages/api/admin/products/index.js we build new product api

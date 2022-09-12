@@ -41,6 +41,13 @@ const handler = async (
       res, // second parameter: response
       user // third parameter: user
     );
+  } else if (req.method === 'DELETE') {
+    // check request method
+    return deleteHandler(
+      req, // first parameter: request
+      res, // second parameter: response
+      user // third parameter: user
+    );
   } else {
     return res.status(400).send({ message: 'Method not allowed' });
   }
@@ -69,7 +76,7 @@ const putHandler = async (
   // get product with Product.findById that accept a parameter
   const product = await Product.findById(req.query.id);
 
-  // check
+  // check product is defined
   if (product) {
     // if product does exist
     // get product.name from req.body.name
@@ -103,5 +110,42 @@ const putHandler = async (
     res.status(404).send({ message: 'Product not found' });
   }
 };
+
+// define deleteHandler ( async function )
+const deleteHandler = async (
+  req, // first parameter: request
+  res // second parameter: response
+) => {
+  // connect to the database
+  await db.connect();
+  // get product using Product.findById
+  const product = await Product.findById(
+    req.query.id // parameter: id
+  );
+  // check product
+  if (product) {
+    // if product is defined
+    // call remove method
+    await product.remove();
+    // disconnect from the database
+    await db.disconnect();
+
+    /* call send method 
+    parameter: object*/
+    res.send({
+      message: 'Product deleted successfully',
+    });
+  }
+  // otherwise
+  else {
+    /* disconnect from the database */
+    await db.disconnect();
+    // response status code 404, send message 'Product not found'
+    res.status(404).send({
+      message: 'Product not found',
+    });
+  }
+};
+
 // export handler
 export default handler;

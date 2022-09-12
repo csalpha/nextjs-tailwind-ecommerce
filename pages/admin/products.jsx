@@ -1,8 +1,10 @@
 import axios from 'axios';
 import Link from 'next/link';
 import React, { useEffect, useReducer } from 'react';
+import { useRouter } from 'next/router';
 import Layout from '../../components/Layout';
 import { getError } from '../../utils/error';
+import { toast } from 'react-toastify';
 
 /* define reducer that accept two parameters */
 function reducer(state, action) {
@@ -26,9 +28,53 @@ function reducer(state, action) {
     // case action.type = 'FETCH_FAIL'
     case 'FETCH_FAIL':
       return {
-        ...state, // // keep previous state
+        ...state, // keep previous state
         loading: false, // set loading to false
         error: action.payload, // fill the error with data from backend
+      };
+    // case action.type = 'CREATE_REQUEST'
+    case 'CREATE_REQUEST':
+      return {
+        ...state, // keep previous state
+        loadingCreate: true, // set loadingCreate to true
+      };
+    // case action.type = 'CREATE_SUCCESS'
+    case 'CREATE_SUCCESS':
+      return {
+        ...state, // keep previous state
+        loadingCreate: false, // set loadingCreate to true
+      };
+    // case action.type = 'CREATE_FAIL'
+    case 'CREATE_FAIL':
+      return {
+        ...state, // keep previous state
+        loadingCreate: false, // set loadingCreate to false
+      };
+    // case action.type = 'DELETE_REQUEST'
+    case 'DELETE_REQUEST':
+      return {
+        ...state, // keep previous state
+        loadingDelete: true, // set loadingDelete to true
+      };
+    // case action.type = 'DELETE_SUCCESS'
+    case 'DELETE_SUCCESS':
+      return {
+        ...state, // keep previous state
+        loadingDelete: false, // set loadingDelete to false
+        successDelete: true, //  set successDelete to true
+      };
+    // case action.type = 'DELETE_FAIL'
+    case 'DELETE_FAIL':
+      return {
+        ...state, // keep previous state
+        loadingDelete: false, // set loadingDelete to false
+      };
+    // case action.type = 'DELETE_RESET'
+    case 'DELETE_RESET':
+      return {
+        ...state, // keep previous state
+        loadingDelete: false, // set loadingDelete to false
+        successDelete: false, // set successDelete to false
       };
     default:
       // return state as it is
@@ -38,8 +84,14 @@ function reducer(state, action) {
 
 // export AdminProdcutsScreen
 export default function AdminProdcutsScreen() {
+  // get router from useRouter hook
+  const router = useRouter();
+
   // array is coming from useReducer
-  const [{ loading, error, products }, dispatch] = useReducer(
+  const [
+    { loading, error, products, loadingCreate, successDelete, loadingDelete }, // [0]
+    dispatch, // [1]
+  ] = useReducer(
     reducer, // first parameter: reducer function
     {
       loading: true, // set loading to true
@@ -47,6 +99,51 @@ export default function AdminProdcutsScreen() {
       error: '', // set error to empty string
     } /* second parameter: is a object */
   );
+
+  // define createHandler ( async function )
+  const createHandler = async () => {
+    //
+    if (
+      // call confirm method
+      !window.confirm(
+        // if is true
+        'Are you sure?' // accept a string (parameter)
+      )
+    ) {
+      // exit
+      return;
+    }
+
+    // otherwise
+
+    // define try catch
+    try {
+      // dispatch 'CREATE_REQUEST' action
+      dispatch({
+        type: 'CREATE_REQUEST', // action.type = 'CREATE_REQUEST'
+      });
+      // get data from backend using axios.post (ajax request)
+      const { data } = await axios.post(`/api/admin/products`);
+      // dispatch 'CREATE_SUCCESS' action
+      dispatch({
+        type: 'CREATE_SUCCESS', // action.type = 'CREATE_SUCCESS'
+      });
+      // show success message
+      toast.success('Product created successfully');
+      // redirect user to ...
+      router.push(
+        `/admin/product/${data.product._id}` // address
+      );
+      // if there is an error
+    } catch (err) {
+      // dispatch 'CREATE_FAIL' action
+      dispatch(
+        { type: 'CREATE_FAIL' } // action.type = 'CREATE_FAIL'
+      );
+      // show error msg
+      toast.error(getError(err));
+    }
+  };
 
   /* define useEffect because we are send an ajax request 
   to backend to get data */
@@ -58,7 +155,7 @@ export default function AdminProdcutsScreen() {
           // dispatch 'FETCH_REQUEST' action
           dispatch({ type: 'FETCH_REQUEST' });
           // call api on page load using useEffect
-          // get data from backend using axios.get
+          // get data from backend using axios.get (request)
           const { data } = await axios.get(`/api/admin/products`);
           // dispatch 'FETCH_SUCCESS' action
           dispatch({
@@ -74,11 +171,54 @@ export default function AdminProdcutsScreen() {
           });
         }
       };
-      // call fetchData
-      fetchData();
+      // check successDelete
+      if (successDelete) {
+        //dispatch 'DELETE_RESET' action
+        dispatch({
+          type: 'DELETE_RESET', // action.type
+        });
+      } else {
+        // call fetchData
+        fetchData();
+      }
     }, // first parameter: arrow function
-    [] // second parameter: empty array
+    [successDelete] // second parameter: array
   );
+
+  // define deleteHandler (async function)
+  // paramter: productId
+  const deleteHandler = async (productId) => {
+    // check
+    if (
+      !window.confirm(
+        'Are you sure?' // parameter is a string
+      ) /* if condiction is true */
+    ) {
+      // exit
+      return;
+    }
+    // define try catch
+    try {
+      dispatch({
+        type: 'DELETE_REQUEST', // action.type
+      });
+
+      // delete data from backend using axios.delete
+      await axios.delete(`/api/admin/products/${productId}`);
+      dispatch({
+        type: 'DELETE_SUCCESS', // action.type
+      });
+      // show success messoage
+      toast.success('Product deleted successfully');
+      // if there is an error
+    } catch (err) {
+      dispatch({
+        type: 'DELETE_FAIL', // action.type
+      });
+      // show error message
+      toast.error(getError(err));
+    }
+  };
 
   // reder Admin Products Layout
   return (
@@ -111,7 +251,27 @@ export default function AdminProdcutsScreen() {
         <div className="overflow-x-auto md:col-span-3">
           {/* set heading one to Products 
           set text-extra-large */}
-          <h1 className="mb-4 text-xl">Products</h1>
+          <div className="flex justify-between">
+            <h1 className="mb-4 text-xl">Products</h1>
+            {/* check loadingDelete */}
+            {loadingDelete /* loadingDelete is defined */ /* AND */ && (
+              /* rendreing div with text: 'Deleting item...' */
+              <div>Deleting item...</div>
+            )}
+            {/* button */}
+            <button
+              disabled={loadingCreate}
+              onClick={createHandler}
+              className="primary-button"
+            >
+              {/* check loadingCreate */}
+              {loadingCreate /*if is true */
+                ? /* set text: 'loading' */
+                  'Loading' // otherwise
+                : /* set text: 'Create' */
+                  'Create'}
+            </button>
+          </div>
           {/* Condictional rendering */}
           {loading ? ( // if loading does exist
             // show loading div
@@ -160,7 +320,12 @@ export default function AdminProdcutsScreen() {
                           </a>
                         </Link>
                         &nbsp;
-                        <button className="default-button" type="button">
+                        <button
+                          /* set onClick */
+                          onClick={() => deleteHandler(product._id)}
+                          className="default-button"
+                          type="button"
+                        >
                           Delete
                         </button>
                       </td>
