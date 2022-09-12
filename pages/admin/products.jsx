@@ -208,7 +208,7 @@ export default function AdminProdcutsScreen() {
       dispatch({
         type: 'DELETE_SUCCESS', // action.type
       });
-      // show success messoage
+      // show success message
       toast.success('Product deleted successfully');
       // if there is an error
     } catch (err) {
@@ -255,7 +255,7 @@ export default function AdminProdcutsScreen() {
             <h1 className="mb-4 text-xl">Products</h1>
             {/* check loadingDelete */}
             {loadingDelete /* loadingDelete is defined */ /* AND */ && (
-              /* rendreing div with text: 'Deleting item...' */
+              /* render div with text: 'Deleting item...' */
               <div>Deleting item...</div>
             )}
             {/* button */}

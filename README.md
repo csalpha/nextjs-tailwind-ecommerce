@@ -233,3 +233,9 @@
        add createHandler and deleteHandler ( async functions )
     2. in pages/api/admin/products/[id]/index.jsx we implement delete api
     3. in pages/api/admin/products/index.js we build new product api
+
+30. List Users For Admin
+
+    1. in pages/admin/users.jsx we created users page
+    2. in pages/api/admin/users/[id].js we created users api
+    3. use api in users page
