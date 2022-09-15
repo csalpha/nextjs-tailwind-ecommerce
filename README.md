@@ -239,3 +239,8 @@
     1. in pages/admin/users.jsx we created users page
     2. in pages/api/admin/users/[id].js we created users api
     3. use api in users page
+
+31. React Responsive Carousel
+
+    1. in bash console we install React Responsive Carousel
+       npm install react-responsive-carousel --save

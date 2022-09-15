@@ -8,9 +8,17 @@ import { Menu } from '@headlessui/react';
 import 'react-toastify/dist/ReactToastify.css';
 import { Store } from '../utils/Store';
 import DropdownLink from './DropdownLink';
+// // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// // import {
+// //   faBars,
+// //   faCircleXmark,
+// //   faEllipsisVertical,
+// //   faMoon,
+// // } from '@fortawesome/free-solid-svg-icons';
+// // // import Axios from 'axios';
 
 export default function Layout({ title, children }) {
-  // get status and session from useSession
+  /* get status and session from useSession */
   const {
     status, //it's a flag that showing the loading of session
     data: session,
@@ -19,8 +27,11 @@ export default function Layout({ title, children }) {
 
   // get the state, dispatch from useContext
   const { state, dispatch } = useContext(Store);
+  // get cart from the state
   const { cart } = state;
   const [cartItemsCount, setCartItemsCount] = useState(0);
+
+  const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
 
   useEffect(() => {
     setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
@@ -39,7 +50,14 @@ export default function Layout({ title, children }) {
   return (
     <>
       <Head>
-        <title>{title ? title + ' - Next App' : 'Next App'}</title>
+        <title>
+          {title /* title is defined */
+            ? /* render */
+              title + ' - Next App'
+            : /* otherwise*/
+              /* render */
+              'Next App'}
+        </title>
         <meta name="description" content="Ecommerce Website" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -49,6 +67,13 @@ export default function Layout({ title, children }) {
       <div className="flex min-h-screen flex-col justify-between ">
         <header>
           <nav className="flex h-12 items-center px-4 justify-between shadow-md">
+            {/* <a
+              onClick={() => setSidebarIsOpen(!sidebarIsOpen)}
+              className="p-2"
+              type="button"
+            >
+              <FontAwesomeIcon icon={faBars} />
+            </a> */}
             <Link href="/">
               <a className="text-lg font-bold">Next App</a>
             </Link>
@@ -115,10 +140,54 @@ export default function Layout({ title, children }) {
                   <a className="p-2">Login</a>
                 </Link>
               )}
+
+              {/* <a className="p-2">
+                <FontAwesomeIcon icon={faMoon} />
+              </a> */}
+
+              {/* <a className="p-2">
+                <FontAwesomeIcon icon={faEllipsisVertical} />
+              </a> */}
             </div>
           </nav>
         </header>
-        <main className="container m-auto mt-4 px-4">{children}</main>
+
+        {/* side bar */}
+        <div
+          className={
+            sidebarIsOpen
+              ? ' active-nav side-navbar d-flex justify-content-between flex-wrap flex-column'
+              : 'side-navbar d-flex justify-content-between flex-wrap flex-column'
+          }
+        >
+          {/* <div
+          className={
+            sidebarIsOpen
+              ? ' fixed top-0 left-0 z-40 h-full w-[20rem] bg-gray-300 p-10 duration-300  ease-in-out dark:bg-gray-800 translate-x-0'
+              : 'hidden'
+          }
+        > */}
+          {/* fixed top-0 left-0 z-40 h-full w-[20rem] bg-gray-300 p-10 duration-300  ease-in-out dark:bg-gray-800 translate-x-0 */}
+          {/* <nav className="flex-column text-white w-100 p-2">
+            <a className="">Categories</a>
+            <a
+              className="ml-2"
+              onClick={() => setSidebarIsOpen(!sidebarIsOpen)}
+            >
+              <FontAwesomeIcon icon={faCircleXmark} />
+            </a>
+            <p>
+              <a>Consoles</a>
+            </p>
+          </nav> */}
+        </div>
+
+        <main
+          onClick={() => setSidebarIsOpen(false)}
+          className="container m-auto mt-4 px-4"
+        >
+          {children}
+        </main>
         <footer className="flex h-10 justify-center items-center shadow-inner">
           <p>
             &copy; {new Date().getFullYear()} Copyright:{' Carlos Serôdio'}

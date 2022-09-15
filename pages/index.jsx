@@ -8,9 +8,12 @@ import axios from 'axios';
 import { useContext } from 'react';
 
 export default function Home({ products }) {
+  // get a object with state and dispatch from useContext
   const { state, dispatch } = useContext(Store);
+  // get cart from the state
   const { cart } = state;
 
+  // define addCartHandler ( async function )
   const addToCartHandler = async (product) => {
     const existItem = cart.cartItems.find((x) => x.slug === product.slug);
     const quantity = existItem ? existItem.quantity + 1 : 1;
