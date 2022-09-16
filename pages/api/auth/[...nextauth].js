@@ -80,6 +80,7 @@ export default NextAuth({
             email: user.email,
             image: 'f',
             isAdmin: user.isAdmin,
+            isSeller: user.isSeller,
           };
         }
         // if the email/password is incorrect

@@ -244,3 +244,9 @@
 
     1. in bash console we install React Responsive Carousel
        npm install react-responsive-carousel --save
+
+32. Create User Edit Page
+
+    1. In pages/api/admin/users/[id]/index.js we created an api for user
+    2. In pages/admin/user/[id].jsx we created the edit page
+    3. show user data in form

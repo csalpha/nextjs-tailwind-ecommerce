@@ -6,6 +6,8 @@ import { Store } from '../utils/Store';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { useContext } from 'react';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+// import { Carousel } from 'react-responsive-carousel';
 
 export default function Home({ products }) {
   // get a object with state and dispatch from useContext
@@ -30,6 +32,19 @@ export default function Home({ products }) {
   return (
     <Layout title="Home Page">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
+        {/* <Carousel showArrows autoPlay showThumbs={false}> */}
+        {/* getting data from MongoDB */}
+        {/* {products.map((product) => (
+            <ProductItem
+              product={product}
+              key={product.seller}
+              addToCartHandler={addToCartHandler}
+            ></ProductItem>
+          ))} */}
+        {/* fetch data from the database */}
+        {/* </Carousel> */}
+        {/* <h2>Featured Products</h2> */}
+
         {/* getting data from MongoDB */}
         {products.map((product) => (
           <ProductItem

@@ -105,7 +105,6 @@ const putHandler = async (
   } else {
     // disconnect from the database
     await db.disconnect();
-
     // return response: status code 404 and send message error 'Product not found'
     res.status(404).send({ message: 'Product not found' });
   }

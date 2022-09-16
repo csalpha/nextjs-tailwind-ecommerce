@@ -207,6 +207,7 @@ function AdminUsersScreen() {
                     <th className="px-5 text-left">ID</th>
                     <th className="p-5 text-left">NAME</th>
                     <th className="p-5 text-left">EMAIL</th>
+                    <th className="p-5 text-left">SELLER</th>
                     <th className="p-5 text-left">ADMIN</th>
                     <th className="p-5 text-left">ACTIONS</th>
                   </tr>
@@ -217,6 +218,7 @@ function AdminUsersScreen() {
                       <td className=" p-5 ">{user._id.substring(20, 24)}</td>
                       <td className=" p-5 ">{user.name}</td>
                       <td className=" p-5 ">{user.email}</td>
+                      <td className=" p-5 ">{user.isSeller ? 'YES' : 'NO'}</td>
                       <td className=" p-5 ">{user.isAdmin ? 'YES' : 'NO'}</td>
                       <td className=" p-5 ">
                         <Link href={`/admin/user/${user._id}`} passHref>

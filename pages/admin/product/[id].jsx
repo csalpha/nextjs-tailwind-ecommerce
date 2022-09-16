@@ -222,7 +222,6 @@ export default function AdminProductEditScreen() {
     try {
       // dispatch UPDATE_REQUEST action.type
       dispatch({ type: 'UPDATE_REQUEST' });
-
       // axios.put to update product
       await axios.put(`/api/admin/products/${productId}`, {
         name,

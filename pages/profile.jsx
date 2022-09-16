@@ -10,6 +10,8 @@ export default function ProfileScreen() {
   // get session from useSession method
   const { data: session } = useSession();
 
+  console.log(session);
+
   /* {
       handleSubmit,
       register,

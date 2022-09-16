@@ -31,7 +31,7 @@ export default function Layout({ title, children }) {
   const { cart } = state;
   const [cartItemsCount, setCartItemsCount] = useState(0);
 
-  const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
+  // const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
 
   useEffect(() => {
     setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
@@ -154,11 +154,11 @@ export default function Layout({ title, children }) {
 
         {/* side bar */}
         <div
-          className={
-            sidebarIsOpen
-              ? ' active-nav side-navbar d-flex justify-content-between flex-wrap flex-column'
-              : 'side-navbar d-flex justify-content-between flex-wrap flex-column'
-          }
+        // className={
+        //   sidebarIsOpen
+        //     ? ' active-nav side-navbar d-flex justify-content-between flex-wrap flex-column'
+        //     : 'side-navbar d-flex justify-content-between flex-wrap flex-column'
+        // }
         >
           {/* <div
           className={
@@ -183,7 +183,7 @@ export default function Layout({ title, children }) {
         </div>
 
         <main
-          onClick={() => setSidebarIsOpen(false)}
+          // onClick={() => setSidebarIsOpen(false)}
           className="container m-auto mt-4 px-4"
         >
           {children}
