@@ -68,15 +68,14 @@ export default function AdminUserEditScreen() {
   /* define a reducer using useReducer hook 
   first: get { loading, error, loadingUpdate, loadingUpload  } from  the reducer hook
   second: get dispatch from the reducer hook, to dispatch actions */
-  const [{ loading, error, loadingUpdate, loadingUpload }, dispatch] =
-    useReducer(
-      /* first parameter: reducer */
-      reducer,
-      {
-        loading: true /* set loading to true */,
-        error: '' /* set error to empty string */,
-      } /* second parameter: an object */
-    );
+  const [{ loading, error, loadingUpdate }, dispatch] = useReducer(
+    /* first parameter: reducer */
+    reducer,
+    {
+      loading: true /* set loading to true */,
+      error: '' /* set error to empty string */,
+    } /* second parameter: an object */
+  );
 
   /* get object from useForm */
   const {
@@ -205,6 +204,11 @@ export default function AdminUserEditScreen() {
                     } /* second parameter is a object */
                   )}
                 />
+                {/* check errors.name */}
+                {errors.name && ( // if is true AND
+                  /* show alert error message */
+                  <div className="text-red-500">{errors.name.message}</div>
+                )}
               </div>
               <div className="mb-4">
                 {/* create a label and connect the label
@@ -221,6 +225,11 @@ export default function AdminUserEditScreen() {
                     } /* second parameter is a object */
                   )}
                 />
+                {/* check errors.email */}
+                {errors.email && ( // if is true AND
+                  /* show alert error message */
+                  <div className="text-red-500">{errors.email.message}</div>
+                )}
               </div>
 
               <div className="mb-4">
@@ -255,7 +264,15 @@ export default function AdminUserEditScreen() {
               <div className="mb-4"></div>
               {/* button box with margin-bottom-four */}
               <div className="mb-4">
-                <button className="primary-button">Update User</button>
+                <button disabled={loadingUpdate} className="primary-button">
+                  {loadingUpdate /* is true */
+                    ? 'Loading'
+                    : /* is false */
+                      'Update'}
+                </button>
+              </div>
+              <div className="mb-4">
+                <Link href={`/admin/users`}>Back</Link>
               </div>
             </form>
           )}
