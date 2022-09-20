@@ -5,7 +5,10 @@ import Layout from '../../../components/Layout';
 import { getError } from '../../../utils/error';
 
 /* define reducer that accept two parameters */
-function reducer(state, action) {
+function reducer(
+  state, // 1st param
+  action // 2nd param
+) {
   // define switch case
   switch (action.type) {
     /* case action.type is 'FETCH_REQUEST' */

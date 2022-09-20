@@ -8,14 +8,15 @@ import { Menu } from '@headlessui/react';
 import 'react-toastify/dist/ReactToastify.css';
 import { Store } from '../utils/Store';
 import DropdownLink from './DropdownLink';
-// // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// // import {
-// //   faBars,
-// //   faCircleXmark,
-// //   faEllipsisVertical,
-// //   faMoon,
-// // } from '@fortawesome/free-solid-svg-icons';
-// // // import Axios from 'axios';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import {
+//   // faBars,
+//   // faCircleXmark,
+//   // faEllipsisH,
+//   // faEllipsisVertical,
+//   // faMoon,
+// } from '@fortawesome/free-solid-svg-icons';
+// import Axios from 'axios';
 
 export default function Layout({ title, children }) {
   /* get status and session from useSession */
@@ -26,10 +27,17 @@ export default function Layout({ title, children }) {
   //while we are loading the session we don't show the user name
 
   // get the state, dispatch from useContext
-  const { state, dispatch } = useContext(Store);
+  const { state, dispatch } = useContext(
+    Store // pass parameter
+  );
   // get cart from the state
   const { cart } = state;
-  const [cartItemsCount, setCartItemsCount] = useState(0);
+  const [
+    cartItemsCount, // [0]
+    setCartItemsCount, // [1]
+  ] = useState(
+    0 // parameter
+  );
 
   // const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
 
@@ -188,6 +196,9 @@ export default function Layout({ title, children }) {
         >
           {children}
         </main>
+        {/* <div className="text-center">
+          <FontAwesomeIcon icon={faEllipsisH} />
+        </div> */}
         <footer className="flex h-10 justify-center items-center shadow-inner">
           <p>
             &copy; {new Date().getFullYear()} Copyright:{' Carlos Serôdio'}
