@@ -32,6 +32,11 @@ body {
   left: 0;
 }
 
+.carousel .slide img {
+  width: 100%;
+  max-width: 400px;
+}
+
 a {
   @apply text-blue-600 hover:text-blue-800;
 }

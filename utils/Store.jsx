@@ -5,13 +5,16 @@ import Cookies from 'js-cookie';
    and use it in Components */
 
 /* Create Store */
+
 /* get Store from createContext  */
 export const Store = createContext();
 
 // define initial state
 const initialState = {
   // read the cart object from the cookie
-  cart: Cookies.get('cart') // if it's true
+  cart: Cookies.get(
+    'cart' // pass 'cart'
+  ) // if it's true
     ? // convert the cart in the cookie to js object
       JSON.parse(
         Cookies.get(

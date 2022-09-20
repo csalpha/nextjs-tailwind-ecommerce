@@ -6,23 +6,30 @@ import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 config.autoAddCss = false;
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function MyApp({
-  Component,
+  Component, //
   pageProps: { session, ...pageProps /* rest of pageProps*/ },
 }) {
   return (
     // wrap StoreProvider with SessionProvider
     // pass the session (is comming from the pageProps ) to SessionProvider
     // we can have the session in all pages
-    <SessionProvider session={session}>
+    <SessionProvider
+      session={session} // set session to session
+    >
       <StoreProvider>
         {/* Define PayPalScriptProvider  and make deferLoading to true */}
-        <PayPalScriptProvider deferLoading={true}>
+        <PayPalScriptProvider
+          deferLoading={true} // set deferLoading to true
+        >
           {/* Check Component.auth */}
           {Component.auth ? ( // if it's true render <Auth> Component
             /* set adminOnly to Component.auth.adminOnly  */
-            <Auth adminOnly={Component.auth.adminOnly}>
+            <Auth
+              adminOnly={Component.auth.adminOnly} // set adminOnly
+            >
               <Component {...pageProps} />
             </Auth>
           ) : (
@@ -36,23 +43,27 @@ function MyApp({
 }
 
 // implement Auth function
-function Auth(
-  { children, adminOnly } /* pass object with children and adminOnly */
-) {
+function Auth({
+  children, // 1st parameter: pass children
+  adminOnly, // 2nd parameter: pass adminOnly
+}) {
   // get the router from useRouter()
   const router = useRouter();
-  // useSession Hook
-  const { status, data: session /* get session from useSession hook */ } =
-    useSession({
-      // only logged in user can access to it
-      required: true, // set required to true
 
-      // if the user does not login:
-      onUnauthenticated() {
-        // redirect to unauthorized page, set the message to login required
-        router.push('/unauthorized?message=login required');
-      },
-    });
+  // useSession Hook
+  const {
+    status /* get status from useSession */,
+    data: session /* get session from useSession hook */,
+  } = useSession({
+    // only logged in user can access to it
+    required: true, // set required to true
+
+    // if the user does not login:
+    onUnauthenticated() {
+      // redirect to unauthorized page, set the message to login required
+      router.push('/unauthorized?message=login required');
+    },
+  });
 
   /* check the status */
   if (status === 'loading') {
