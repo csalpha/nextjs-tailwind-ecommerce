@@ -103,7 +103,18 @@ export default function ProductScreen(props) {
             </div>
             <div className="mb-2 flex justify-between">
               <div>Status</div>
-              <div>{product.countInStock > 0 ? 'In stock' : 'Unavailable'}</div>
+              {/* <div>{product.countInStock > 0 ? 'In stock' : 'Unavailable'}</div> */}
+              <div>
+                {product.countInStock > 0 ? (
+                  <span className="bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900">
+                    In Stock
+                  </span>
+                ) : (
+                  <span className="bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-200 dark:text-red-900">
+                    Unavailable
+                  </span>
+                )}
+              </div>
             </div>
             <button
               className="primary-button w-full"
