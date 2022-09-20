@@ -32,19 +32,6 @@ export default function Home({ products }) {
   return (
     <Layout title="Home Page">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
-        {/* <Carousel showArrows autoPlay showThumbs={false}> */}
-        {/* getting data from MongoDB */}
-        {/* {products.map((product) => (
-            <ProductItem
-              product={product}
-              key={product.seller}
-              addToCartHandler={addToCartHandler}
-            ></ProductItem>
-          ))} */}
-        {/* fetch data from the database */}
-        {/* </Carousel> */}
-        {/* <h2>Featured Products</h2> */}
-
         {/* getting data from MongoDB */}
         {products.map((product) => (
           <ProductItem

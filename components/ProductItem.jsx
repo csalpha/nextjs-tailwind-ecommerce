@@ -2,7 +2,10 @@ import Link from 'next/link';
 import React from 'react';
 
 export default function ProductItem({ product, addToCartHandler }) {
+  console.log(addToCartHandler);
+
   return (
+    /* render card */
     <div className="card">
       <Link href={`/product/${product.slug}`}>
         <a>
