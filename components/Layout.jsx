@@ -8,42 +8,71 @@ import { Menu } from '@headlessui/react';
 import 'react-toastify/dist/ReactToastify.css';
 import { Store } from '../utils/Store';
 import DropdownLink from './DropdownLink';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import {
-//   // faBars,
-//   // faCircleXmark,
-//   // faEllipsisH,
-//   // faEllipsisVertical,
-//   // faMoon,
-// } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faBars,
+  faCircleXmark,
+  // faEllipsisH,
+  faEllipsisVertical,
+  faMoon,
+} from '@fortawesome/free-solid-svg-icons';
 // import Axios from 'axios';
+/* fixed top-0 left-0 z-40 h-full w-[20rem] bg-gray-300 p-10 duration-300  ease-in-out dark:bg-gray-800 translate-x-0 */
 
-export default function Layout({ title, children }) {
+export default function Layout({
+  title, // pass title
+  children, // pass children
+}) {
   /* get status and session from useSession */
   const {
-    status, //it's a flag that showing the loading of session
-    data: session,
+    //it's a flag that showing the loading of session
+    status, // get status from useSession
+    data: session, // get session from useSession
   } = useSession();
   //while we are loading the session we don't show the user name
 
-  // get the state, dispatch from useContext
-  const { state, dispatch } = useContext(
+  const {
+    state, // get  state from useContext
+    dispatch, // get dispatch from useContext
+  } = useContext(
     Store // pass parameter
   );
-  // get cart from the state
-  const { cart } = state;
+
+  const {
+    cart, // get cart from the state
+  } = state;
+
+  // get array from useState
   const [
-    cartItemsCount, // [0]
-    setCartItemsCount, // [1]
+    cartItemsCount, // [0] - get cart Items Count from useState
+    setCartItemsCount, // [1] - set Cart Items Count ( method )
   ] = useState(
-    0 // parameter
+    0 // pass 0
   );
 
-  // const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
+  // get array from useState
+  const [
+    sidebarIsOpen, // [0] - get sidebarIsOpen from useState
+    setSidebarIsOpen, // [1] - set Sidebar Is Open ( method )
+  ] = useState(
+    false // pass false
+  );
 
-  useEffect(() => {
-    setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
-  }, [cart.cartItems]);
+  // define useEffect
+  useEffect(
+    () => {
+      setCartItemsCount(
+        cart.cartItems.reduce(
+          (
+            a, // 1st param
+            c // 2nd param
+          ) => a + c.quantity, // 1st param - pass function
+          0 //2nd param - pass function
+        )
+      );
+    }, // 1st parameter
+    [cart.cartItems] // 2nd paramter
+  );
 
   // define logoutClickHandler
   const logoutClickHandler = () => {
@@ -75,18 +104,18 @@ export default function Layout({ title, children }) {
       <div className="flex min-h-screen flex-col justify-between ">
         <header>
           <nav className="flex h-12 items-center px-4 justify-between shadow-md">
-            {/* <a
+            <a
               onClick={() => setSidebarIsOpen(!sidebarIsOpen)}
               className="p-2"
               type="button"
             >
               <FontAwesomeIcon icon={faBars} />
-            </a> */}
+            </a>
             <Link href="/">
               <a className="text-lg font-bold">Next App</a>
             </Link>
             <div>
-              <Link href="/cart">
+              {/* <Link href="/cart">
                 <a className="p-2">
                   Cart
                   {cartItemsCount > 0 && (
@@ -95,17 +124,37 @@ export default function Layout({ title, children }) {
                     </span>
                   )}
                 </a>
-              </Link>
+              </Link> */}
+
               {/* check the status */}
               {status === 'loading' ? ( // status it's loading?
                 'Loading' // show loading
-              ) : session?.user ? ( // session exists? (true)
+              ) : //otherwise
+              session?.user ? ( // session exists? (true)
                 /* add Menu from headless ui */
+
                 <Menu as="div" className="relative inline-block">
                   <Menu.Button className="text-blue-600">
-                    {session.user.name}
+                    <a className="p-2">
+                      <FontAwesomeIcon icon={faEllipsisVertical} />
+                    </a>
                   </Menu.Button>
                   <Menu.Items className="absolute right-0 w-56 origin-top-right bg-white  shadow-lg ">
+                    <Menu.Item>
+                      <DropdownLink className="dropdown-link" href="/profile">
+                        {session.user.name}
+                      </DropdownLink>
+                    </Menu.Item>
+                    <Menu.Item>
+                      <DropdownLink className="dropdown-link" href="/cart">
+                        Cart
+                        {cartItemsCount > 0 && (
+                          <span className="ml-1 rounded-full bg-red-600 px-2 py-1 text-xs font-bold text-white">
+                            {cartItemsCount}
+                          </span>
+                        )}
+                      </DropdownLink>
+                    </Menu.Item>
                     <Menu.Item>
                       <DropdownLink className="dropdown-link" href="/profile">
                         Profile
@@ -140,68 +189,87 @@ export default function Layout({ title, children }) {
                         Logout
                       </a>
                     </Menu.Item>
+                    <Menu.Item>
+                      <DropdownLink className="dropdown-link" href="#">
+                        <FontAwesomeIcon icon={faMoon} />
+                      </DropdownLink>
+                    </Menu.Item>
                   </Menu.Items>
                 </Menu>
               ) : (
                 /* show a link to the login page */
-                <Link href="/login">
-                  <a className="p-2">Login</a>
-                </Link>
+                <Menu as="div" className="relative inline-block">
+                  <Menu.Button className="text-blue-600">
+                    <a className="p-2">
+                      <FontAwesomeIcon icon={faEllipsisVertical} />
+                    </a>
+                  </Menu.Button>
+                  <Menu.Items className="absolute right-0 w-56 origin-top-right bg-white  shadow-lg ">
+                    <Menu.Item>
+                      <DropdownLink className="dropdown-link" href="/cart">
+                        Cart
+                        {cartItemsCount > 0 && (
+                          <span className="ml-1 rounded-full bg-red-600 px-2 py-1 text-xs font-bold text-white">
+                            {cartItemsCount}
+                          </span>
+                        )}
+                      </DropdownLink>
+                    </Menu.Item>
+                    <Menu.Item>
+                      <DropdownLink className="dropdown-link" href="/login">
+                        Login
+                      </DropdownLink>
+                    </Menu.Item>
+                    <Menu.Item>
+                      <DropdownLink className="dropdown-link" href="#">
+                        <FontAwesomeIcon icon={faMoon} />
+                      </DropdownLink>
+                    </Menu.Item>
+                  </Menu.Items>
+                </Menu>
+
+                // <Link href="/login">
+                //   <a className="p-2">Login</a>
+                // </Link>
               )}
 
               {/* <a className="p-2">
                 <FontAwesomeIcon icon={faMoon} />
               </a> */}
-
-              {/* <a className="p-2">
-                <FontAwesomeIcon icon={faEllipsisVertical} />
-              </a> */}
             </div>
           </nav>
         </header>
 
-        {/* side bar */}
+        {/* render side bar */}
         <div
-        // className={
-        //   sidebarIsOpen
-        //     ? ' active-nav side-navbar d-flex justify-content-between flex-wrap flex-column'
-        //     : 'side-navbar d-flex justify-content-between flex-wrap flex-column'
-        // }
-        >
-          {/* <div
           className={
             sidebarIsOpen
               ? ' fixed top-0 left-0 z-40 h-full w-[20rem] bg-gray-300 p-10 duration-300  ease-in-out dark:bg-gray-800 translate-x-0'
               : 'hidden'
           }
-        > */}
-          {/* fixed top-0 left-0 z-40 h-full w-[20rem] bg-gray-300 p-10 duration-300  ease-in-out dark:bg-gray-800 translate-x-0 */}
-          {/* <nav className="flex-column text-white w-100 p-2">
-            <a className="">Categories</a>
-            <a
-              className="ml-2"
-              onClick={() => setSidebarIsOpen(!sidebarIsOpen)}
-            >
-              <FontAwesomeIcon icon={faCircleXmark} />
-            </a>
-            <p>
-              <a>Consoles</a>
-            </p>
-          </nav> */}
+        >
+          <a className="">Categories</a>
+          <a className="ml-2" onClick={() => setSidebarIsOpen(!sidebarIsOpen)}>
+            <FontAwesomeIcon icon={faCircleXmark} />
+          </a>
+          <p>
+            <Link onClick={() => setSidebarIsOpen(!sidebarIsOpen)} href="/">
+              Consoles
+            </Link>
+          </p>
         </div>
 
-        <main
-          // onClick={() => setSidebarIsOpen(false)}
-          className="container m-auto mt-4 px-4"
-        >
-          {children}
-        </main>
+        {/* render main */}
+        <main className="container m-auto mt-4 px-4">{children}</main>
         {/* <div className="text-center">
           <FontAwesomeIcon icon={faEllipsisH} />
         </div> */}
+
+        {/* render footer */}
         <footer className="flex h-10 justify-center items-center shadow-inner">
           <p>
-            &copy; {new Date().getFullYear()} Copyright:{' Carlos Serôdio'}
+            &copy; {new Date().getFullYear()} {' CARLOS SERODIO '} ALL RIGHTS
+            RESERVED
           </p>
         </footer>
       </div>

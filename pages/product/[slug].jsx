@@ -11,16 +11,27 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 
 // get props like parameter
-export default function ProductScreen(props) {
-  // from props get the product
+export default function ProductScreen(
+  props // pass props
+) {
+  // get products from props
   const { product } = props;
-  // define state and dispatch equal to useContext
-  const { state, dispatch } = useContext(Store);
 
+  const {
+    state, // get state from the useContext
+    dispatch, // get dispatch from useContext
+  } = useContext(
+    Store // pass Store
+  );
+
+  // get router from the useRouter
   const router = useRouter();
 
   // if product does not exist
   if (!product) {
+    {
+      /* render Layout */
+    }
     return <Layout title="Produt Not Found">Produt Not Found</Layout>;
   }
 

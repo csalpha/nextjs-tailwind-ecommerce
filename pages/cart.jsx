@@ -11,29 +11,44 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 function CartScreen() {
+  // get router from useRouter
   const router = useRouter();
 
   // access to the context and get cart from it
-  const { state, dispatch } = useContext(Store);
+  const {
+    state, // get state from useContext
+    dispatch, // get dispatch from useContext
+  } = useContext(
+    Store // pass Store from '../utils/Store'
+  );
 
   const {
-    cart: { cartItems },
+    cart: { cartItems }, // get the cart from state
   } = state;
 
+  // define removeItemHandler function
   const removeItemHandler = (item) => {
-    dispatch({ type: 'CART_REMOVE_ITEM', payload: item });
+    dispatch({
+      type: 'CART_REMOVE_ITEM', // set action.type to 'CART_REMOVE_ITEM'
+      payload: item, // set payload with item
+    });
   };
 
+  // define updateCartHandler function
   const updateCartHandler = async (
-    item,
-    qty /* new quantity of the item */
+    item /* 2nd parameter: item */,
+    qty /* 1st parameter:  new quantity of the item */
   ) => {
     const quantity = Number(qty); // cast qty to number
 
-    /*when  we put a id in this api, 
+    /* when  we put a id in this api, 
       api is be called and the product
-      will be returned in a data variable*/
-    const { data } = await axios.get(`/api/products/${item._id}`);
+      will be returned in a data variable */
+
+    /* get data from the backend */
+    const { data } = await axios.get(
+      `/api/products/${item._id}` // pass api address
+    );
 
     /* check the countInStock in the database to make sure that we have
     stock/quantity in the database */
@@ -42,8 +57,11 @@ function CartScreen() {
     }
     dispatch(
       {
-        type: 'CART_ADD_ITEM', //string
-        payload: { ...item, quantity }, // object
+        type: 'CART_ADD_ITEM', // set action.type to 'CART_ADD_ITEM'
+        payload: {
+          ...item,
+          quantity,
+        }, // object
       } //object
     );
     toast.success('Product updated in the cart');
@@ -52,7 +70,9 @@ function CartScreen() {
   // return a page that shows list of items in the cart
   return (
     /* Create page layout */
-    <Layout title="Shopping Cart">
+    <Layout
+      title="Shopping Cart" // set layout title
+    >
       <h1 className="mb-4 text-xl">Shopping Cart</h1>
       {cartItems.length === 0 ? ( // true - Cart is empty
         <div>

@@ -187,5 +187,11 @@ export function StoreProvider(
   // return Store ( is comming from react context )
   // get Provider from the Store object
   // render {children}
-  return <Store.Provider value={value}>{children}</Store.Provider>;
+  return (
+    <Store.Provider
+      value={value} // set value to value
+    >
+      {children}
+    </Store.Provider>
+  );
 }
