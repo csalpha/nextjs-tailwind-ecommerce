@@ -8,7 +8,10 @@ import db from '../../../../utils/db';
 
 /* handler is an async function that accept
    request and response as parameter */
-const handler = async (req, res) => {
+const handler = async (
+  req, // 1st parameter - request
+  res // 2nd parameter - response
+) => {
   /* get the current user using getSession function from next-auth */
   const session = await getSession({ req }); // pass request as parameter
   if (!session) {

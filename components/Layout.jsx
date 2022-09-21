@@ -16,7 +16,7 @@ import {
   faEllipsisVertical,
   faMoon,
 } from '@fortawesome/free-solid-svg-icons';
-// import Axios from 'axios';
+import Axios from 'axios';
 /* fixed top-0 left-0 z-40 h-full w-[20rem] bg-gray-300 p-10 duration-300  ease-in-out dark:bg-gray-800 translate-x-0 */
 
 export default function Layout({
@@ -58,9 +58,39 @@ export default function Layout({
     false // pass false
   );
 
+  const [
+    categories, // [0] - get categories from useState
+    setCategories, // [1] - get setCategories from useState
+  ] = useState(
+    [] // pass a empty array
+  );
+
   // define useEffect
   useEffect(
     () => {
+      // define fetchCategories function (async function)
+      const fetchCategories = async () => {
+        try {
+          /* send an ajax request to backend using axios.get 
+                 to getting the product categories from backend */
+          const { data } = await Axios.get(
+            `/api/products/categories` // parameter
+          );
+          // call function
+          setCategories(
+            data // parameter
+          );
+          // if there is an error
+        } catch (err) {
+          // // show toast error
+          // toast.error(
+          //   getError(
+          //     err // parameter of getError method
+          //   )
+          // ); // parameter of error method
+        }
+      };
+      fetchCategories();
       setCartItemsCount(
         cart.cartItems.reduce(
           (
@@ -73,6 +103,8 @@ export default function Layout({
     }, // 1st parameter
     [cart.cartItems] // 2nd paramter
   );
+
+  console.log(categories);
 
   // define logoutClickHandler
   const logoutClickHandler = () => {
@@ -240,7 +272,7 @@ export default function Layout({
           </nav>
         </header>
 
-        {/* render side bar */}
+        {/* render side bar ( categories )*/}
         <div
           className={
             sidebarIsOpen
@@ -248,14 +280,25 @@ export default function Layout({
               : 'hidden'
           }
         >
-          <a className="">Categories</a>
+          <a className="">
+            <strong>Categories</strong>
+          </a>
           <a className="ml-2" onClick={() => setSidebarIsOpen(!sidebarIsOpen)}>
             <FontAwesomeIcon icon={faCircleXmark} />
           </a>
           <p>
-            <Link onClick={() => setSidebarIsOpen(!sidebarIsOpen)} href="/">
+            {categories.map((category) => (
+              <Link
+                key={category}
+                href={`/search?category=${category}`}
+                // onClick={() => setSidebarIsOpen(false)}
+              >
+                {category}
+              </Link>
+            ))}
+            {/* <Link onClick={() => setSidebarIsOpen(!sidebarIsOpen)} href="/">
               Consoles
-            </Link>
+            </Link> */}
           </p>
         </div>
 

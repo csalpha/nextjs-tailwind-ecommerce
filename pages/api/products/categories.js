@@ -9,16 +9,12 @@ const handler = async (
 ) => {
   // connect to the database
   await db.connect();
-  /* get the product in the database using findById method 
-  and using the id in the url, to get the product in the 
-  database based on the id in the url '/api/products/id' */
-  const product = await Product.findById(
-    req.query.id // contains product id
-  );
+  /* get the product in the database using find method */
+  const categories = await Product.find().distinct('category');
   // disconnect from the database
   await db.disconnect();
   //return the product to the frontend
-  res.send(product);
+  res.send(categories);
 };
 
 // export handler function
