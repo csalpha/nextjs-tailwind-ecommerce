@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+.site-container,
+#root {
+  min-height: 100vh;
+}
+
 html,
 body {
   padding: 0;
@@ -82,4 +87,14 @@ textarea {
   /*margin-vertically-3 |rounded large for border | 
   background-color-green-100 | padding-3 | set text-green-700*/
   @apply my-3 rounded-lg bg-green-100 p-3 text-green-700;
+}
+
+navbar-nav .nav-link.active,
+.navbar-nav .show > .nav-link {
+  color: #ffffff;
+}
+
+.nav-link {
+  color: #ffffff;
+  padding: 0.1rem 0;
 }

@@ -4,9 +4,10 @@ import Product from '../models/Product';
 import db from '../utils/db';
 import { Store } from '../utils/Store';
 import { toast } from 'react-toastify';
-import axios from 'axios';
-import { useContext } from 'react';
+import Axios from 'axios';
+import { useContext, useEffect, useState } from 'react';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import { Carousel } from 'react-responsive-carousel';
 
 export default function Home({
   products, // pass products
@@ -19,11 +20,38 @@ export default function Home({
     Store // pass parameter
   );
 
-  console.log(products);
-
   const {
     cart, // get cart from the state
   } = state;
+
+  const [
+    sellers, // [0] - get sellers from useState
+    setSellers, // [1] - set Sellers
+  ] = useState(
+    [] // pass a empty array
+  );
+
+  useEffect(() => {
+    const fetchData = async () => {
+      // dispatch({ type: 'FETCH_REQUEST' });
+      try {
+        const { data } = await Axios.get('/api/users/top-sellers');
+        // dispatch({ type: 'FETCH_SUCCESS', payload: { products, sellers } });
+
+        // call function
+        setSellers(
+          data // parameter
+        );
+      } catch (error) {
+        // dispatch({
+        //   type: 'FETCH_FAIL',
+        //   payload: getError(error),
+        // });
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // define addCartHandler ( async function )
   const addToCartHandler = async (
@@ -33,7 +61,7 @@ export default function Home({
       (x) => x.slug === product.slug // pass parameter
     );
     const quantity = existItem ? existItem.quantity + 1 : 1;
-    const { data } = await axios.get(`/api/products/${product._id}`);
+    const { data } = await Axios.get(`/api/products/${product._id}`);
 
     if (data.countInStock < quantity) {
       return toast.error('Sorry. Product is out of stock');
@@ -51,6 +79,19 @@ export default function Home({
 
   return (
     <Layout title="Home Page">
+      {/* <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4"> */}
+      <div className="">
+        <Carousel showArrows autoPlay showThumbs={false}>
+          {sellers.map((seller) => (
+            <div key={seller._id}>
+              {/* <Link to={`/seller/${seller._id}`}> */}
+              <img src={seller.seller.logo} alt={seller.seller.name} />
+              <p className="legend">{seller.seller.name}</p>
+              {/* </Link> */}
+            </div>
+          ))}
+        </Carousel>
+      </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
         {/* getting data from MongoDB */}
         {products.map((product) => (

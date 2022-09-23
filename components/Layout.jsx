@@ -4,11 +4,11 @@ import Link from 'next/link';
 import Cookies from 'js-cookie';
 import React, { useContext, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
-import { Menu } from '@headlessui/react';
 import 'react-toastify/dist/ReactToastify.css';
 import { Store } from '../utils/Store';
 import DropdownLink from './DropdownLink';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import {
   faBars,
   faCircleXmark,
@@ -58,9 +58,17 @@ export default function Layout({
     false // pass false
   );
 
+  // get array from useState
+  const [
+    sidebarRightIsOpen, // [0] - get sidebarIsOpen from useState
+    setSidebarRightIsOpen, // [1] - set Sidebar Is Open ( method )
+  ] = useState(
+    false // pass false
+  );
+
   const [
     categories, // [0] - get categories from useState
-    setCategories, // [1] - get setCategories from useState
+    setCategories, // [1] - setCategories ( method )
   ] = useState(
     [] // pass a empty array
   );
@@ -72,10 +80,11 @@ export default function Layout({
       const fetchCategories = async () => {
         try {
           /* send an ajax request to backend using axios.get 
-                 to getting the product categories from backend */
+                 to getting data from backend */
           const { data } = await Axios.get(
             `/api/products/categories` // parameter
           );
+
           // call function
           setCategories(
             data // parameter
@@ -91,6 +100,7 @@ export default function Layout({
         }
       };
       fetchCategories();
+
       setCartItemsCount(
         cart.cartItems.reduce(
           (
@@ -101,10 +111,8 @@ export default function Layout({
         )
       );
     }, // 1st parameter
-    [cart.cartItems] // 2nd paramter
+    [cart.cartItems, dispatch] // 2nd paramter
   );
-
-  console.log(categories);
 
   // define logoutClickHandler
   const logoutClickHandler = () => {
@@ -118,7 +126,9 @@ export default function Layout({
 
   return (
     <>
+      {/* Render Head */}
       <Head>
+        {/* Render Title */}
         <title>
           {title /* title is defined */
             ? /* render */
@@ -130,12 +140,16 @@ export default function Layout({
         <meta name="description" content="Ecommerce Website" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      {/* ########### */}
 
       <ToastContainer position="bottom-center" limit={1} />
 
       <div className="flex min-h-screen flex-col justify-between ">
+        {/* Render Header */}
         <header>
+          {/* render nav */}
           <nav className="flex h-12 items-center px-4 justify-between shadow-md">
+            {/* Side Bar Left */}
             <a
               onClick={() => setSidebarIsOpen(!sidebarIsOpen)}
               className="p-2"
@@ -143,140 +157,128 @@ export default function Layout({
             >
               <FontAwesomeIcon icon={faBars} />
             </a>
+
+            {/* Nav Title */}
             <Link href="/">
               <a className="text-lg font-bold">Next App</a>
             </Link>
             <div>
-              {/* <Link href="/cart">
-                <a className="p-2">
-                  Cart
-                  {cartItemsCount > 0 && (
-                    <span className="ml-1 rounded-full bg-red-600 px-2 py-1 text-xs font-bold text-white">
-                      {cartItemsCount}
-                    </span>
-                  )}
-                </a>
-              </Link> */}
+              {/* Icon Side Bar Right */}
+              <a
+                className="p-2"
+                onClick={() => setSidebarRightIsOpen(!sidebarRightIsOpen)}
+                type="button"
+              >
+                <FontAwesomeIcon icon={faEllipsisVertical} />
+              </a>
 
+              {/* Side Bar Right */}
               {/* check the status */}
               {status === 'loading' ? ( // status it's loading?
                 'Loading' // show loading
-              ) : //otherwise
-              session?.user ? ( // session exists? (true)
-                /* add Menu from headless ui */
-
-                <Menu as="div" className="relative inline-block">
-                  <Menu.Button className="text-blue-600">
-                    <a className="p-2">
-                      <FontAwesomeIcon icon={faEllipsisVertical} />
+              ) : session?.user ? (
+                // session exists? (true) (
+                <div
+                  className={
+                    sidebarRightIsOpen
+                      ? 'fixed top-12 right-0 z-40 h-full w-[20rem] bg-gray-300 p-10 duration-300 ease-in-out dark:bg-gray-800 translate-x-0'
+                      : 'hidden'
+                  }
+                >
+                  <p>
+                    <a className="">
+                      <strong>Menu</strong>
                     </a>
-                  </Menu.Button>
-                  <Menu.Items className="absolute right-0 w-56 origin-top-right bg-white  shadow-lg ">
-                    <Menu.Item>
-                      <DropdownLink className="dropdown-link" href="/profile">
-                        {session.user.name}
-                      </DropdownLink>
-                    </Menu.Item>
-                    <Menu.Item>
-                      <DropdownLink className="dropdown-link" href="/cart">
-                        Cart
-                        {cartItemsCount > 0 && (
-                          <span className="ml-1 rounded-full bg-red-600 px-2 py-1 text-xs font-bold text-white">
-                            {cartItemsCount}
-                          </span>
-                        )}
-                      </DropdownLink>
-                    </Menu.Item>
-                    <Menu.Item>
-                      <DropdownLink className="dropdown-link" href="/profile">
-                        Profile
-                      </DropdownLink>
-                    </Menu.Item>
-                    <Menu.Item>
-                      <DropdownLink
-                        className="dropdown-link"
-                        href="/order-history"
-                      >
-                        Order History
-                      </DropdownLink>
-                    </Menu.Item>
-                    {/* check */}
-                    {session.user.isAdmin && ( // if session.user.isAdmin is true
-                      /* Create Admin Menu */
-                      <Menu.Item>
-                        <DropdownLink
-                          className="dropdown-link"
-                          href="/admin/dashboard"
-                        >
-                          Admin Dashboard
-                        </DropdownLink>
-                      </Menu.Item>
+                    <a
+                      className="ml-2"
+                      onClick={() => setSidebarRightIsOpen(!sidebarRightIsOpen)}
+                    >
+                      <FontAwesomeIcon icon={faCircleXmark} />
+                    </a>
+                  </p>
+                  <DropdownLink className="dropdown-link" href="/profile">
+                    {session.user.name}
+                  </DropdownLink>
+                  <DropdownLink className="dropdown-link" href="/profile">
+                    Profile
+                  </DropdownLink>
+                  <DropdownLink className="dropdown-link" href="/order-history">
+                    Order History
+                  </DropdownLink>
+                  <DropdownLink className="dropdown-link" href="/cart">
+                    Cart
+                    {cartItemsCount > 0 && (
+                      <span className="ml-1 rounded-full bg-red-600 px-2 py-1 text-xs font-bold text-white">
+                        {cartItemsCount}
+                      </span>
                     )}
-                    <Menu.Item>
-                      <a
-                        className="dropdown-link"
-                        href="#"
-                        onClick={logoutClickHandler}
-                      >
-                        Logout
-                      </a>
-                    </Menu.Item>
-                    <Menu.Item>
-                      <DropdownLink className="dropdown-link" href="#">
-                        <FontAwesomeIcon icon={faMoon} />
-                      </DropdownLink>
-                    </Menu.Item>
-                  </Menu.Items>
-                </Menu>
+                  </DropdownLink>
+                  {/* check */}
+                  {session.user.isAdmin && ( // if session.user.isAdmin is true
+                    /* Create Admin Menu */
+
+                    <DropdownLink
+                      className="dropdown-link"
+                      href="/admin/dashboard"
+                    >
+                      Admin Dashboard
+                    </DropdownLink>
+                  )}
+
+                  <DropdownLink
+                    className="dropdown-link"
+                    href="/"
+                    onClick={logoutClickHandler}
+                  >
+                    Logout
+                  </DropdownLink>
+
+                  <DropdownLink className="dropdown-link" href="#">
+                    <FontAwesomeIcon icon={faMoon} />
+                  </DropdownLink>
+                </div>
               ) : (
-                /* show a link to the login page */
-                <Menu as="div" className="relative inline-block">
-                  <Menu.Button className="text-blue-600">
-                    <a className="p-2">
-                      <FontAwesomeIcon icon={faEllipsisVertical} />
-                    </a>
-                  </Menu.Button>
-                  <Menu.Items className="absolute right-0 w-56 origin-top-right bg-white  shadow-lg ">
-                    <Menu.Item>
-                      <DropdownLink className="dropdown-link" href="/cart">
-                        Cart
-                        {cartItemsCount > 0 && (
-                          <span className="ml-1 rounded-full bg-red-600 px-2 py-1 text-xs font-bold text-white">
-                            {cartItemsCount}
-                          </span>
-                        )}
-                      </DropdownLink>
-                    </Menu.Item>
-                    <Menu.Item>
-                      <DropdownLink className="dropdown-link" href="/login">
-                        Login
-                      </DropdownLink>
-                    </Menu.Item>
-                    <Menu.Item>
-                      <DropdownLink className="dropdown-link" href="#">
-                        <FontAwesomeIcon icon={faMoon} />
-                      </DropdownLink>
-                    </Menu.Item>
-                  </Menu.Items>
-                </Menu>
-
-                // <Link href="/login">
-                //   <a className="p-2">Login</a>
-                // </Link>
+                <div
+                  className={
+                    sidebarRightIsOpen
+                      ? 'fixed top-12 right-0 z-40 h-full w-[20rem] bg-gray-300 p-10 duration-300 ease-in-out dark:bg-gray-800 translate-x-0'
+                      : 'hidden'
+                  }
+                >
+                  <a className="">
+                    <strong>Menu</strong>
+                  </a>
+                  <a
+                    className="ml-2"
+                    onClick={() => setSidebarRightIsOpen(!sidebarRightIsOpen)}
+                  >
+                    <FontAwesomeIcon icon={faCircleXmark} />
+                  </a>
+                  <DropdownLink className="dropdown-link" href="/cart">
+                    Cart
+                    {cartItemsCount > 0 && (
+                      <span className="ml-1 rounded-full bg-red-600 px-2 py-1 text-xs font-bold text-white">
+                        {cartItemsCount}
+                      </span>
+                    )}
+                  </DropdownLink>
+                  <DropdownLink className="dropdown-link" href="/login">
+                    Login
+                  </DropdownLink>
+                  <DropdownLink className="dropdown-link" href="#">
+                    <FontAwesomeIcon icon={faMoon} />
+                  </DropdownLink>
+                </div>
               )}
-
-              {/* <a className="p-2">
-                <FontAwesomeIcon icon={faMoon} />
-              </a> */}
             </div>
           </nav>
         </header>
 
-        {/* render side bar ( categories )*/}
+        {/* render side bar left ( categories )*/}
         <div
           className={
             sidebarIsOpen
-              ? ' fixed top-0 left-0 z-40 h-full w-[20rem] bg-gray-300 p-10 duration-300  ease-in-out dark:bg-gray-800 translate-x-0'
+              ? 'fixed top-12 left-0 z-40 h-full w-[20rem] bg-gray-300 p-10 duration-300 ease-in-out dark:bg-gray-800 translate-x-0'
               : 'hidden'
           }
         >
@@ -288,25 +290,20 @@ export default function Layout({
           </a>
           <p>
             {categories.map((category) => (
-              <Link
+              <DropdownLink
+                className="dropdown-link"
                 key={category}
                 href={`/search?category=${category}`}
                 // onClick={() => setSidebarIsOpen(false)}
               >
                 {category}
-              </Link>
+              </DropdownLink>
             ))}
-            {/* <Link onClick={() => setSidebarIsOpen(!sidebarIsOpen)} href="/">
-              Consoles
-            </Link> */}
           </p>
         </div>
 
         {/* render main */}
         <main className="container m-auto mt-4 px-4">{children}</main>
-        {/* <div className="text-center">
-          <FontAwesomeIcon icon={faEllipsisH} />
-        </div> */}
 
         {/* render footer */}
         <footer className="flex h-10 justify-center items-center shadow-inner">

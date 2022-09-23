@@ -1,21 +1,25 @@
-import Product from '../../../models/Product';
+import User from '../../../models/User';
 import db from '../../../utils/db';
 
 // define handler ( async function )
-// create an api to get the product categories from backend
+// create an api to get the user from backend
 const handler = async (
   req, // 1st parameter - request
   res // 2nd parameter - response
 ) => {
   // connect to the database
   await db.connect();
-  /* get the categories in the database using find method 
-  and distinct category */
-  const categories = await Product.find().distinct('category');
+
+  /* get topSellers */
+  const topSellers = await User.find({ isSeller: true })
+    .sort({ 'seller.rating': -1 })
+    .limit(3);
+
   // disconnect from the database
   await db.disconnect();
-  //return the categories to the frontend
-  res.send(categories);
+
+  //return the product to the frontend
+  res.send(topSellers);
 };
 
 // export handler function

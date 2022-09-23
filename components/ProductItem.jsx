@@ -2,7 +2,7 @@ import Link from 'next/link';
 import React from 'react';
 
 export default function ProductItem({ product, addToCartHandler }) {
-  console.log(addToCartHandler);
+  console.log(product);
 
   return (
     /* render card */
@@ -22,7 +22,9 @@ export default function ProductItem({ product, addToCartHandler }) {
             <h2 className="text-lg">{product.name}</h2>
           </a>
         </Link>
+        {/* <Link to={`/seller/${product.seller._id}`}> */}
         <p className="mb-2">{product.brand}</p>
+        {/* </Link> */}
         <p>{product.price} €</p>
         <button
           className="primary-button"
