@@ -27,7 +27,6 @@ export default function Home({
 
   const {
     cart, // get cart from the state
-    // userInfo, //get userInfo from the state
   } = state;
 
   const [
