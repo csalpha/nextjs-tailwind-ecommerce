@@ -1,9 +1,12 @@
 import Axios from 'axios';
-import Image from 'next/image';
+// // import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useReducer } from 'react';
-import { useSession } from 'next-auth/react';
+import {
+  useEffect,
+  // useReducer
+} from 'react';
+// // import { useSession } from 'next-auth/react';
 import Layout from '../../components/Layout';
 
 // create OrderScreen function
@@ -17,9 +20,10 @@ export default function SellerScreen() {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const { data: user } = await Axios.get(`/api/users/sellers/${userId}`);
-      } catch (error) {}
+      // try {
+      //   const { data: user } = await Axios.get(`/api/users/sellers/${userId}`);
+      // } catch (error) {
+      // }
     };
     fetchData();
   }, [userId]);
