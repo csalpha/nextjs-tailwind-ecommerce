@@ -39,7 +39,7 @@ export default function Layout({
 
   const {
     cart, // get cart from the state
-    userInfo, //get userInfo from the state
+    // userInfo, //get userInfo from the state
   } = state;
 
   // get array from useState
