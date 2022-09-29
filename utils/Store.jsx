@@ -4,12 +4,10 @@ import Cookies from 'js-cookie';
 /* we wanna use react context to save the cart items in a global state
    and use it in Components */
 
-/* Create Store */
-
-/* get Store from createContext  */
+/* Create and export Context ( Store )  */
 export const Store = createContext();
 
-// define initial state
+/* define initial state */
 const initialState = {
   // read the cart object from the cookie
   cart: Cookies.get(
@@ -26,6 +24,11 @@ const initialState = {
         shippingAddress: {}, // set the shippingAddress with empty object
         paymentMethod: '', // set the paymentMethod with a empty string
       },
+
+  /* user info */
+  userInfo: Cookies.get('userInfo')
+    ? JSON.parse(Cookies.get('userInfo'))
+    : null,
 };
 
 /* define reducer that accept two parameters */
@@ -107,9 +110,15 @@ function reducer(
         JSON.stringify({ ...state.cart, cartItems }) // convert to string
       );
 
-      /* return all card items except that we passed in the
+      /* return all cart items except that we passed in the
       action.payload */
-      return { ...state, cart: { ...state.cart, cartItems } };
+      return {
+        ...state, // keep previous state
+        cart: {
+          ...state.cart, // keep previous state
+          cartItems, // update cartItems
+        },
+      };
     }
     /* case action.type is 'CART_RESET' */
     case 'CART_RESET':
@@ -148,6 +157,18 @@ function reducer(
           },
         },
       };
+    /* case action.type is 'SAVE_SHIPPING_ADDRESS_MAP_LOCATION' */
+    case 'SAVE_SHIPPING_ADDRESS_MAP_LOCATION':
+      return {
+        ...state, // keep previous state
+        cart: {
+          ...state.cart, // keep previous state.cart
+          shippingAddress: {
+            ...state.cart.shippingAddress, // keep previous state.cart.shippingAddress
+            location: action.payload, // set location to action.payload
+          },
+        },
+      };
     // case SAVE_PAYMENT_METHOD in the rducer
     case 'SAVE_PAYMENT_METHOD':
       return {
@@ -158,6 +179,34 @@ function reducer(
           paymentMethod: action.payload,
         },
       };
+    /* case action.type is 'CART_CLEAR' */
+    case 'CART_CLEAR':
+      return {
+        ...state, // keep previous state
+        cart: {
+          ...state.cart, // keep previous state
+          cartItems: [], // empty array
+        },
+      };
+    /* case action.type is 'USER_SIGNIN' */
+    case 'USER_SIGNIN':
+      return {
+        ...state, // keep previous state
+        userInfo: action.payload, // set userInfo to action.payload
+      };
+    /* case action.type is 'USER_SIGNOUT' */
+    case 'USER_SIGNOUT':
+      return {
+        ...state, // keep previous state
+        userInfo: null, // set userInfo to null
+        cart: {
+          cartItems: [], // set cartItems to an empty array
+          shippingAddress: {
+            location: {}, // set to location to an empty object
+          },
+          paymentMethod: '', // set paymentMethod to an empty string
+        },
+      };
     default:
       return state; // return state as they are
   }
@@ -165,8 +214,9 @@ function reducer(
 
 /* StoreProvider - is a Wrapper and pass global props to children */
 /* Provedor de Loja */
+/* Export  StoreProvider */
 export function StoreProvider(
-  { children } // pass parameter
+  { children } // get children
 ) {
   // get the state and dispatch from useReducer
   const [
@@ -189,13 +239,12 @@ export function StoreProvider(
 
   // return Store ( is comming from react context )
   // get Provider from the Store object
-  // render {children}
+
   return (
     /* Provedor de loja */
-    <Store.Provider
-      value={value} // set value to value
-    >
-      {children} {/* All React Components */}
+    <Store.Provider value={value} /* pass value */>
+      {children} {/* render {children}*/}
+      {/* All React Components */}
     </Store.Provider>
   );
 }

@@ -31,14 +31,12 @@ function MyApp({
         >
           {/* Check Component.auth */}
           {Component.auth ? ( // if it's true render <Auth> Component
-            /* set adminOnly to Component.auth.adminOnly  */
             <Auth
               adminOnly={Component.auth.adminOnly} // set adminOnly
             >
               <Component {...pageProps} />
             </Auth>
           ) : (
-            // otherwise render the component as it is
             <Component {...pageProps} />
           )}
         </PayPalScriptProvider>
