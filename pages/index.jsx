@@ -8,6 +8,11 @@ import Axios from 'axios';
 import { useContext, useEffect, useState } from 'react';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Carousel } from 'react-responsive-carousel';
+import Link from 'next/link';
+
+/* useContext - The main idea of using the context is to allow your components 
+   to access some global data and re-render when that global data is changed.
+*/
 
 export default function Home({
   products, // pass products
@@ -22,6 +27,7 @@ export default function Home({
 
   const {
     cart, // get cart from the state
+    userInfo, //get userInfo from the state
   } = state;
 
   const [
@@ -84,10 +90,16 @@ export default function Home({
         <Carousel showArrows autoPlay showThumbs={false}>
           {sellers.map((seller) => (
             <div key={seller._id}>
-              {/* <Link to={`/seller/${seller._id}`}> */}
-              <img src={seller.seller.logo} alt={seller.seller.name} />
-              <p className="legend">{seller.seller.name}</p>
-              {/* </Link> */}
+              <Link href={`/seller/${seller._id}`}>
+                <a>
+                  <img src={seller.seller.logo} alt={seller.seller.name} />
+                </a>
+              </Link>
+              <Link href={`/seller/${seller._id}`}>
+                <a>
+                  <p className="legend">{seller.seller.name}</p>
+                </a>
+              </Link>
             </div>
           ))}
         </Carousel>

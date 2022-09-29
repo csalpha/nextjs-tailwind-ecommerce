@@ -8,7 +8,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Store } from '../utils/Store';
 import DropdownLink from './DropdownLink';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 import {
   faBars,
   faCircleXmark,
@@ -40,6 +39,7 @@ export default function Layout({
 
   const {
     cart, // get cart from the state
+    userInfo, //get userInfo from the state
   } = state;
 
   // get array from useState
@@ -123,6 +123,10 @@ export default function Layout({
     // call signOut
     signOut({ callbackUrl: '/login' /* set callbackUrl to the login */ });
   };
+
+  // // sidebarIsOpen
+  // //   ? (document.body.style.overflow = 'hidden')
+  // //   : (document.body.style.overflow = 'auto');
 
   return (
     <>
@@ -282,12 +286,14 @@ export default function Layout({
               : 'hidden'
           }
         >
-          <a className="">
+          <p></p>
+          <a className="ml-2">
             <strong>Categories</strong>
           </a>
           <a className="ml-2" onClick={() => setSidebarIsOpen(!sidebarIsOpen)}>
             <FontAwesomeIcon icon={faCircleXmark} />
           </a>
+
           <p>
             {categories.map((category) => (
               <DropdownLink
@@ -313,6 +319,29 @@ export default function Layout({
           </p>
         </footer>
       </div>
+
+      {/* if(sidebarIsOpen)
+      {
+        setSidebarRightIsOpen(!sidebarRightIsOpen)
+      }
+        
+      if(sidebarRightIsOpen)
+      {}
+        setSidebarIsOpen(!sidebarIsOpen) */}
+
+      {sidebarIsOpen || sidebarRightIsOpen ? (
+        <style jsx global>{`
+          body {
+            overflow: hidden;
+          }
+        `}</style>
+      ) : (
+        <style jsx global>{`
+          body {
+            overflow: auto;
+          }
+        `}</style>
+      )}
     </>
   );
 }

@@ -1,5 +1,6 @@
 import '../styles/globals.css';
 import { SessionProvider, useSession } from 'next-auth/react';
+
 import { StoreProvider } from '../utils/Store';
 import { useRouter } from 'next/router';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
@@ -8,6 +9,7 @@ import '@fortawesome/fontawesome-svg-core/styles.css';
 config.autoAddCss = false;
 // // import 'bootstrap/dist/css/bootstrap.min.css';
 
+// implement MyApp function
 function MyApp({
   Component, //
   pageProps: { session, ...pageProps /* rest of pageProps*/ },
@@ -16,11 +18,14 @@ function MyApp({
     // wrap StoreProvider with SessionProvider
     // pass the session (is comming from the pageProps ) to SessionProvider
     // we can have the session in all pages
+
+    /* evolve the application with the SessionProvider */
     <SessionProvider
       session={session} // set session to session
     >
+      {/* evolve the application with the StoreProvider */}
       <StoreProvider>
-        {/* Define PayPalScriptProvider  and make deferLoading to true */}
+        {/* evolve the application with the PayPalScriptProvider */}
         <PayPalScriptProvider
           deferLoading={true} // set deferLoading to true
         >

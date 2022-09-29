@@ -22,7 +22,7 @@ export default function ProductItem({ product, addToCartHandler }) {
             <h2 className="text-lg">{product.name}</h2>
           </a>
         </Link>
-        {/* <Link to={`/seller/${product.seller._id}`}> */}
+        {/* <Link to={`/seller/${product.seller}`}> */}
         <p className="mb-2">{product.brand}</p>
         {/* </Link> */}
         <p>{product.price} €</p>

@@ -164,6 +164,7 @@ function reducer(
 }
 
 /* StoreProvider - is a Wrapper and pass global props to children */
+/* Provedor de Loja */
 export function StoreProvider(
   { children } // pass parameter
 ) {
@@ -179,6 +180,8 @@ export function StoreProvider(
   /* define value object
    the value contain current state in the context and
    the dispatch to update state in the context */
+
+  // context global data
   const value = {
     state, // current state
     dispatch,
@@ -188,10 +191,11 @@ export function StoreProvider(
   // get Provider from the Store object
   // render {children}
   return (
+    /* Provedor de loja */
     <Store.Provider
       value={value} // set value to value
     >
-      {children}
+      {children} {/* All React Components */}
     </Store.Provider>
   );
 }
